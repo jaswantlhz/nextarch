@@ -45,7 +45,7 @@ export default function Volumeofairheatgain() {
     const handleCalculate = async () => {
         setLoading(true);
         try {
-            const response = await fetch('https://jaswantlhz-archbackend.vercel.app/api/volume-air-heat-gain', {
+            const response = await fetch('https://archbackend.vercel.app/api/volume-air-heat-gain', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -45,7 +45,7 @@ export default function Qfromach() {
     const handleCalculate = async () => {
         setLoading(true);
         try {
-            const response = await fetch('https://jaswantlhz-archbackend.vercel.app/api/q-from-ach', {
+            const response = await fetch('https://archbackend.vercel.app/api/q-from-ach', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

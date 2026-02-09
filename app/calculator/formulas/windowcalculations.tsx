@@ -55,7 +55,7 @@ export default function Windowcalculations() {
     const handleCalculate = async () => {
         setLoading(true);
         try {
-            const response = await fetch('https://jaswantlhz-archbackend.vercel.app/api/window-calculations', {
+            const response = await fetch('https://archbackend.vercel.app/api/window-calculations', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
