@@ -30,7 +30,6 @@ export default function Home() {
             
             <CardContent>
               <form action={loginaction}>
-
                 <div className="flex flex-col gap-6">
                   <div className=" grid gap-2">
                     <Label htmlFor="email"> Email</Label>
