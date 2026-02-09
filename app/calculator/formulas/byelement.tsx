@@ -55,7 +55,7 @@ export default function Byelement() {
     const handleCalculate = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8000/api/by-element', {
+            const response = await fetch('https://jaswantlhz-archbackend.vercel.app/api/by-element', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

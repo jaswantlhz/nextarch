@@ -64,7 +64,7 @@ export default function Voaqwqtforce() {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://localhost:8000/api/upload-epw', {
+            const response = await fetch('https://jaswantlhz-archbackend.vercel.app/api/upload-epw', {
                 method: 'POST',
                 body: formData,
             });
@@ -88,7 +88,7 @@ export default function Voaqwqtforce() {
 
     const handleFetchEpwData = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/query-epw', {
+            const response = await fetch('https://jaswantlhz-archbackend.vercel.app/api/query-epw', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ export default function Voaqwqtforce() {
     const handleCalculate = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8000/api/volume-air-forces', {
+            const response = await fetch('https://jaswantlhz-archbackend.vercel.app/api/volume-air-forces', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
