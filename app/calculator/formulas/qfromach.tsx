@@ -81,36 +81,36 @@ export default function Qfromach() {
                         <FieldLabel htmlFor="ACH" className="font-source text-slate-700">
                             Air Changes per Hour (ACH)
                         </FieldLabel>
-                        <Input id='ACH' name="ACH" type="number" onChange={handleChange} />
+                        <Input id='ACH' name="ACH" type="number" onChange={handleChange} className=" bg-slate-50" />
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="V" className="font-source text-slate-700">
                             Room Volume (V) [m³]
                         </FieldLabel>
-                        <Input id='V' name="V" type="number" onChange={handleChange} />
+                        <Input id='V' name="V" type="number" onChange={handleChange} className=" bg-slate-50"/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="rho" className="font-source text-slate-700">
                             Air Density (ρ) [kg/m³]
                         </FieldLabel>
-                        <Input id='rho' name="rho" type="number" value={rho} onChange={handleChange} />
+                        <Input id='rho' name="rho" type="number" value={rho} onChange={handleChange} className=" bg-slate-50"/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="Cp" className="font-source text-slate-700">
                             Specific Heat Capacity (C<sub>p</sub>) [J/kg·K]
                         </FieldLabel>
-                        <Input id='Cp' name="Cp" type="number" value={Cp} onChange={handleChange} />
+                        <Input id='Cp' name="Cp" type="number" value={Cp} onChange={handleChange} className=" bg-slate-50"/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="delta_T" className="font-source text-slate-700">
                             Temperature Difference (ΔT) [K]
                         </FieldLabel>
-                        <Input id='delta_T' name="delta_T" type="number" onChange={handleChange} />
+                        <Input id='delta_T' name="delta_T" type="number" onChange={handleChange} className=" bg-slate-50"/>
                     </Field>
                 </FieldGroup>
                 <Button
-                    variant="outline"
-                    className="mt-5 w-30 border-slate-300 text-slate-700"
+                    variant={"destructive"}
+                    className="mt-5 w-30 border-slate-300 "
                     onClick={handleCalculate}
                     disabled={loading}
                 >

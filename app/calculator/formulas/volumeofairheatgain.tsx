@@ -80,32 +80,32 @@ export default function Volumeofairheatgain() {
                 <FieldGroup className="mt-5 grid grid-cols-2 ">
                     <Field>
                         <FieldLabel htmlFor="Ks" className=" font-source text-slate-700"> Sensible heat gained (Ks) [W]</FieldLabel>
-                        <Input id='Ks' name="ks" type="number" onChange={handelchange} />
+                        <Input id='Ks' name="ks" type="number" onChange={handelchange} className=" bg-slate-50"/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="h" className=" font-source text-slate-700">Vapor pressure difference (h) [mm Hg]</FieldLabel>
-                        <Input id='h' name="h" type="number" onChange={handelchange} />
+                        <Input id='h' name="h" type="number" onChange={handelchange} className=" bg-slate-50"/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="t" className=" font-source text-slate-700"> Allowable temperature rise (t) [°C]</FieldLabel>
-                        <Input id='t' name="t" type="number" onChange={handelchange} />
+                        <Input id='t' name="t" type="number" onChange={handelchange} className=" bg-slate-50"/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="wo" className=" font-source text-slate-700"> Specific humidity outside (wo)</FieldLabel>
-                        <Input id='wo' name="wo" type="number" onChange={handelchange} />
+                        <Input id='wo' name="wo" type="number" onChange={handelchange} className=" bg-slate-50"/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="Kl" className="f font-source text-slate-700"> Latent heat gained (kl) [W]</FieldLabel>
-                        <Input id='Kl' name="kl" type="number" onChange={handelchange} />
+                        <Input id='Kl' name="kl" type="number" onChange={handelchange} className=" bg-slate-50"/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="wi" className=" font-source text-slate-700"> Specific humidity inside (wi)</FieldLabel>
-                        <Input id='wi' name="wi" type="number" onChange={handelchange} />
+                        <Input id='wi' name="wi" type="number" onChange={handelchange} className=" bg-slate-50"/>
                     </Field>
                 </FieldGroup>
                 <Button
-                    variant={"outline"}
-                    className=" mt-5 w-30 border-slate-300 text-slate-700"
+                    variant={"destructive"}
+                    className=" mt-5 w-30 border-slate-300 "
                     onClick={handleCalculate}
                     disabled={loading}
                 >

@@ -93,13 +93,13 @@ export default function Windowcalculations() {
                         <FieldLabel htmlFor="v" className="font-source text-slate-700">
                             Room Volume (V) [m³]
                         </FieldLabel>
-                        <Input id='v' name="V_room" type="number" onChange={handleChange} />
+                        <Input id='v' name="V_room" type="number" onChange={handleChange} className=" bg-slate-50"/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="h" className="font-source text-slate-700">
                             Air Changes per Hour (n)
                         </FieldLabel>
-                        <Input id='h' name="n_ach" type="number" onChange={handleChange} />
+                        <Input id='h' name="n_ach" type="number" onChange={handleChange} className=" bg-slate-50"/>
                     </Field>
 
                     <Alert className="col-span-1 bg-blue-100 text-cyan-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50">
@@ -124,13 +124,13 @@ export default function Windowcalculations() {
                         <FieldLabel htmlFor="t" className="font-source text-slate-700">
                             Coefficient of flow (K)
                         </FieldLabel>
-                        <Input id='t' name="K" type="number" value={K} onChange={handleChange} />
+                        <Input id='t' name="K" type="number" value={K} onChange={handleChange} className=" bg-slate-50"/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="wo" className="font-source text-slate-700">
                             Wind speed (Velocity) [m/h]
                         </FieldLabel>
-                        <Input id='wo' name="V" type="number" onChange={handleChange} />
+                        <Input id='wo' name="V" type="number" onChange={handleChange} className=" bg-slate-50"/>
                     </Field>
                 </FieldGroup>
 
@@ -160,6 +160,7 @@ export default function Windowcalculations() {
                                     name="A_effective"
                                     value={A_effective}
                                     onChange={handleChange}
+                                    className=" bg-slate-50"
                                 />
                             </Field>
                         </FieldGroup>
@@ -183,8 +184,8 @@ export default function Windowcalculations() {
                 )}
 
                 <Button
-                    variant="outline"
-                    className="mt-5 mb-6 w-30 border-slate-300 text-slate-700"
+                    variant={"destructive"}
+                    className="mt-5 mb-6 w-30 border-slate-300"
                     onClick={handleCalculate}
                     disabled={loading}
                 >

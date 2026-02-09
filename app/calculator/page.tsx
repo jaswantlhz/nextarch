@@ -51,7 +51,7 @@ export default function Calculator(){
                         <Label>choose the formula type</Label>
                     </div>
                     
-                    <NativeSelect className= " w-svh" value={selectedformula} 
+                    <NativeSelect className= " w-svh bg-slate-100" value={selectedformula} 
                                   onChange={handleformulachange}>
                     
                         <NativeSelectOption value={""}>Select Formula</NativeSelectOption>

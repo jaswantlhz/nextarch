@@ -164,25 +164,25 @@ export default function Voaqwqtforce() {
                         <FieldLabel htmlFor="A_inlet" className="font-source text-slate-700">
                             Free area of inlet opening (A) [m²]
                         </FieldLabel>
-                        <Input id='A_inlet' name="A_inlet" type="number" onChange={handleChange} />
+                        <Input id='A_inlet' name="A_inlet" type="number" onChange={handleChange} className=" bg-slate-50" />
                     </Field>
                         <Field>
                             <FieldLabel htmlFor="h" className="font-source text-slate-700">
                                 Vertical distance between inlet and outlet (h) [m]
                             </FieldLabel>
-                            <Input id='h' name="h" type="number" onChange={handleChange} />
+                            <Input id='h' name="h" type="number" onChange={handleChange} className=" bg-slate-50" />
                         </Field>
                         <Field>
                             <FieldLabel htmlFor="t_i" className="font-source text-slate-700">
                                 Indoor temperature at height h (t<sub>i</sub>) [°C]
                             </FieldLabel>
-                            <Input id='t_i' name="t_i" type="number" onChange={handleChange} />
+                            <Input id='t_i' name="t_i" type="number" onChange={handleChange} className=" bg-slate-50" />
                         </Field>
                         <Field>
                             <FieldLabel htmlFor="A_smaller" className="font-source text-slate-700">
                                 Smaller opening area (A<sub>smaller</sub>) [m²]
                             </FieldLabel>
-                            <Input id='A_smaller' name="A_smaller" type="number" onChange={handleChange} />
+                            <Input id='A_smaller' name="A_smaller" type="number" onChange={handleChange} className=" bg-slate-50"/>
                         </Field>
                     </FieldGroup>
                     <Separator orientation="horizontal" className="mt-5 mb-5" />
@@ -300,25 +300,25 @@ export default function Voaqwqtforce() {
                         <FieldLabel htmlFor="V" className="font-source text-slate-700">
                             Outdoor wind speed (V) [m/h]
                         </FieldLabel>
-                        <Input id='V' name="V" type="number" value={V} onChange={handleChange} />
+                        <Input id='V' name="V" type="number" value={V} onChange={handleChange} className=" bg-slate-50"/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="t_o" className="font-source text-slate-700">
                             Outdoor temperature (t<sub>o</sub>) [°C]
                         </FieldLabel>
-                        <Input id='t_o' name="t_o" type="number" value={t_o} onChange={handleChange} />
+                        <Input id='t_o' name="t_o" type="number" value={t_o} onChange={handleChange} className=" bg-slate-50"/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="K" className="font-source text-slate-700">
                             Effectiveness coefficient (K)
                         </FieldLabel>
-                        <Input id='K' name="K" type="number" value={K} onChange={handleChange} />
+                        <Input id='K' name="K" type="number" value={K} onChange={handleChange} className=" bg-slate-50"/>
                     </Field>
                 </FieldGroup>
 
                 <Button
-                    variant="outline"
-                    className="mt-5 w-30 border-slate-300 text-slate-700"
+                    variant={"destructive"}
+                    className="mt-5 w-30 border-slate-300"
                     onClick={handleCalculate}
                     disabled={loading}
                 >

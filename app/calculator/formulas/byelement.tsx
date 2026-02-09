@@ -94,6 +94,7 @@ export default function Byelement() {
                             type="number"
                             value={deltaT}
                             onChange={(e) => setDeltaT(Number(e.target.value))}
+                            className=" bg-slate-100"
                         />
                     </Field>
                 </FieldGroup>
@@ -158,8 +159,8 @@ export default function Byelement() {
                 </div>
 
                 <Button
-                    variant="outline"
-                    className="mt-5 w-30 border-slate-300 text-slate-700"
+                    variant={"destructive"}
+                    className="mt-5 w-30 border-slate-300 "
                     onClick={handleCalculate}
                     disabled={loading}
                 >
