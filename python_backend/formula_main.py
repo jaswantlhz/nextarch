@@ -1,9 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from math import sqrt
 import uvicorn
+import pandas as pd
+import io
 
 app = FastAPI(title="HVAC Formula Calculator API")
 
@@ -330,6 +332,135 @@ async def window_p(request: WindowPRequest):
     return WindowPResponse(
         shade_factor=round(S, 2)
     )
+
+
+# ==================== EPW File Parsing Endpoint ====================
+
+class EPWDataRequest(BaseModel):
+    year: int = Field(..., description="Year from EPW file")
+    month: int = Field(..., description="Month (1-12)")
+    day: int = Field(..., description="Day (1-31)")
+    hour: int = Field(..., description="Hour (1-24)")
+
+
+class EPWDataResponse(BaseModel):
+    temperature: float = Field(..., description="Dry bulb temperature (°C)")
+    wind_speed_mh: float = Field(..., description="Wind speed (m/h)")
+    wind_speed_ms: float = Field(..., description="Wind speed (m/s)")
+    success: bool = Field(..., description="Whether data was found")
+    message: str = Field(..., description="Status message")
+
+
+@app.post("/api/upload-epw")
+async def upload_epw(file: UploadFile = File(...)):
+    """Upload and store EPW file data in memory for later queries"""
+    try:
+        # Read the file content
+        content = await file.read()
+        
+        # Store in a simple in-memory cache (in production, use proper storage)
+        # For now, we'll just parse and return available years
+        df = pd.read_csv(io.BytesIO(content), skiprows=8, header=None)
+        
+        # Rename columns based on standard EPW format
+        df = df.rename(columns={
+            0: 'Year', 1: 'Month', 2: 'Day', 3: 'Hour', 4: 'Minute',
+            6: 'DryBulbTemp',
+            21: 'WindSpeed'
+        })
+        
+        # Store the dataframe globally (simplified for demo)
+        global epw_data
+        epw_data = df
+        
+        
+        unique_years = sorted(df['Year'].unique().tolist())
+        
+        # Get available months for each year to display like in the streamlit app
+        year_month_data = {}
+        month_names = ['January', 'February', 'March', 'April', 'May', 'June',
+                      'July', 'August', 'September', 'October', 'November', 'December']
+        
+        for year in unique_years:
+            months_in_year = sorted(df[df['Year'] == year]['Month'].unique().tolist())
+            month_name_list = [month_names[m-1] for m in months_in_year]
+            year_month_data[str(year)] = month_name_list
+        
+        return {
+            "success": True,
+            "message": f"EPW file uploaded successfully",
+            "years": unique_years,
+            "year_month_data": year_month_data,
+            "total_records": len(df)
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error parsing EPW file: {str(e)}",
+            "years": [],
+            "total_records": 0
+        }
+
+
+@app.post("/api/query-epw", response_model=EPWDataResponse)
+async def query_epw(request: EPWDataRequest):
+    """Query EPW data for specific date and time"""
+    try:
+        global epw_data
+        
+        if epw_data is None:
+            return EPWDataResponse(
+                temperature=0.0,
+                wind_speed_mh=0.0,
+                wind_speed_ms=0.0,
+                success=False,
+                message="No EPW file uploaded. Please upload an EPW file first."
+            )
+        
+        # Filter dataframe for the requested date/time
+        mask = (
+            (epw_data['Year'] == request.year) &
+            (epw_data['Month'] == request.month) &
+            (epw_data['Day'] == request.day) &
+            (epw_data['Hour'] == request.hour)
+        )
+        
+        selected_rows = epw_data[mask]
+        
+        if selected_rows.empty:
+            return EPWDataResponse(
+                temperature=0.0,
+                wind_speed_mh=0.0,
+                wind_speed_ms=0.0,
+                success=False,
+                message=f"No data found for {request.year}-{request.month:02d}-{request.day:02d} at hour {request.hour}"
+            )
+        
+        row = selected_rows.iloc[0]
+        temp = float(row['DryBulbTemp'])
+        wind_ms = float(row['WindSpeed'])
+        wind_mh = wind_ms * 3600.0  # Convert m/s to m/h
+        
+        return EPWDataResponse(
+            temperature=round(temp, 2),
+            wind_speed_mh=round(wind_mh, 0),
+            wind_speed_ms=round(wind_ms, 2),
+            success=True,
+            message=f"Data found: Temp={temp}°C, Wind={wind_ms} m/s ({wind_mh} m/h)"
+        )
+        
+    except Exception as e:
+        return EPWDataResponse(
+            temperature=0.0,
+            wind_speed_mh=0.0,
+            wind_speed_ms=0.0,
+            success= False,
+            message=f"Error querying EPW data: {str(e)}"
+        )
+
+
+# Initialize global EPW data storage
+epw_data = None
 
 
 if __name__ == "__main__":

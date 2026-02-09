@@ -5,7 +5,7 @@ export async function loginaction(formdata : FormData){
     const email = formdata.get("login_email")
     const password = formdata.get("login_pass")
 
-    if (email !== 'example@email.com' || password !== 'jaswantzephyr'){
+    if (email !== 'example@email.com' || password !== 'quantx'){
         throw new Error("invalid login")
     }
     else{
