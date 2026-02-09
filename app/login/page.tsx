@@ -11,6 +11,8 @@ import {Button} from "@/components/ui/button"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { loginaction } from "../actions/login";
+import { redirect } from "next/dist/server/api-utils";
+
 export default function Home() {
   return (
     <div>
