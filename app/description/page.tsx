@@ -16,7 +16,7 @@ export default function Description(){
     const [,startTransition] = useTransition()
     return(
         <div>
-            <div className="h-dvh w-dvw relative bg-cover" style={{backgroundImage: "url('/bg_desc.jpg')"}}>                
+            <div className="h-dvh w-dvw relative bg-cover" style={{backgroundImage: "url('/curve.jpg')"}}>                
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
               <Card className="relative h-135 w-350 ">
