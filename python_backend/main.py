@@ -462,6 +462,3 @@ async def query_epw(request: EPWDataRequest):
 # Initialize global EPW data storage
 epw_data = None
 
-
-if __name__ == "__main__":
-    uvicorn.run("formula_api:app", host="0.0.0.0", port=8000, reload=True)
