@@ -1,3 +1,4 @@
+"use client"
 import {
   Card,
   CardAction,
@@ -10,8 +11,9 @@ import {
 import {Button} from "@/components/ui/button"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { loginaction } from "../actions/login";
+import { loginaction, to_desc } from "../actions/login";
 import { redirect } from "next/dist/server/api-utils";
+import { startTransition } from "react";
 
 export default function Home() {
   return (
@@ -49,7 +51,7 @@ export default function Home() {
             </CardContent>
             
             <CardFooter className="flex-col gap-2 border-t">
-              <Button type="submit" className="w-full" >login</Button>
+              <Button type="submit" className="w-full" onClick={() => {startTransition(()=> {to_desc()})}}>login</Button>
               <Button variant="outline" className="w-full">login with Google</Button>
             </CardFooter>
 

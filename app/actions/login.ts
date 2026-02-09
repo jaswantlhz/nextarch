@@ -13,6 +13,10 @@ export async function loginaction(formdata : FormData){
     }
 }
 
+export async function to_desc(){
+    redirect('/description')
+}
+
 export async function to_calc(){
     redirect('/calculator')
 }
