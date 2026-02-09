@@ -65,7 +65,6 @@ export default function Calculator(){
                     </NativeSelect>
 
                     <div className=" mt-5 mb-5" >
-                        <h1 className=" font-source font-semibold">Calculates sensible and latent air volumes.</h1>
                         {selectedformula === "Volumeofairheatgain" && <Volumeofairheatgain/>}
                         {selectedformula === "Windowcalculations" && <Windowcalculations/>}
                         {selectedformula === "Volumeofairqw+qtforces" && <Voaqwqtforce/>}
