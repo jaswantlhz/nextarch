@@ -16,10 +16,10 @@ export default function Description(){
     const [,startTransition] = useTransition()
     return(
         <div>
-            <div className="h-dvh w-dvw relative bg-cover" style={{backgroundImage: "url('/curve.avif')"}}>                
+            <div className=" sm:h-dvh sm:w-dvw relative sm:bg-cover" style={{backgroundImage: "url('/curve.avif')"}}>                
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <Card className="relative h-135 w-350 ">
+              <Card className="relative sm:h-135 sm:w-350 ">
                 <CardHeader>
                     <code className=" scroll-m-20 border-b pb-2 text-3xl font-sans font-semibold tracking-tight first:mt-0"> Optimised Window Opening & Combined Ventilation Flow Calculator </code>
                     <code className="leading-7 mt-3 font-sans"> This interactive tool is designed to assist architects, engineers, and building professionals in optimizing window openings and calculating combined ventilation flows. It helps ensure efficient natural ventilation, improved indoor air quality, and enhanced thermal comfort while adhering to established standards for sustainable building design.</code>

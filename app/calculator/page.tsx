@@ -39,9 +39,9 @@ export default function Calculator(){
 
     return(
         <>
-        <div className="h-dvh w-dvw flex justify-around">
+        <div className=" sm:h-dvh sm:w-dvw flex justify-around">
             <div className=" flex ">
-                <div className=" container mt-30 ">
+                <div className=" container  mt-30 ">
                     
                     <div className="">
                         <h1 className=" font-source text-4xl font-semibold">Optimised Window Opening & Combined Ventilation Flow Calculator. <br /></h1>
