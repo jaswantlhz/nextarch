@@ -15,10 +15,10 @@ import { to_calc } from "../actions/login"
 export default function Description() {
   const [, startTransition] = useTransition()
   return (
-    <div>
-      <div className="min-h-dvh w-full relative sm:bg-cover" style={{ backgroundImage: "url('/curve.avif')" }}>
+    <div className="relative min-h-dvh w-full">
+      <div className="absolute inset-0 bg-cover" style={{ backgroundImage: "url('/curve.avif')" }}>
       </div>
-      <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-0">
+      <div className="relative sm:absolute sm:inset-0 flex items-start sm:items-center justify-center p-4 py-8 sm:p-0">
         <Card className="relative w-full max-w-full sm:h-135 sm:w-350">
           <CardHeader>
             <code className="scroll-m-20 border-b pb-2 text-xl sm:text-3xl font-sans font-semibold tracking-tight first:mt-0"> Optimised Window Opening & Combined Ventilation Flow Calculator </code>
