@@ -87,20 +87,20 @@ export default function Windowcalculations() {
 
     return (
         <>
-        <h1 className=" font-source font-semibold">Calculates opening area for ventilation derived from Room Volume.</h1>
+            <h1 className=" font-source font-semibold">Calculates opening area for ventilation derived from Room Volume.</h1>
             <div className="">
-                <FieldGroup className="mt-5 grid grid-cols-2">
+                <FieldGroup className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Field>
                         <FieldLabel htmlFor="v" className="font-source text-slate-700">
                             Room Volume (V) [m³]
                         </FieldLabel>
-                        <Input id='v' name="V_room" type="number" onChange={handleChange} className=" bg-slate-50"/>
+                        <Input id='v' name="V_room" type="number" onChange={handleChange} className=" bg-slate-50" />
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="h" className="font-source text-slate-700">
                             Air Changes per Hour (n)
                         </FieldLabel>
-                        <Input id='h' name="n_ach" type="number" onChange={handleChange} className=" bg-slate-50"/>
+                        <Input id='h' name="n_ach" type="number" onChange={handleChange} className=" bg-slate-50" />
                     </Field>
 
                     <Alert className="col-span-1 bg-blue-100 text-cyan-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50">
@@ -120,18 +120,18 @@ export default function Windowcalculations() {
 
                 <Separator orientation="horizontal" className="mt-10" />
 
-                <FieldGroup className="mt-5 grid grid-cols-2">
+                <FieldGroup className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Field>
                         <FieldLabel htmlFor="t" className="font-source text-slate-700">
                             Coefficient of flow (K)
                         </FieldLabel>
-                        <Input id='t' name="K" type="number" value={K} onChange={handleChange} className=" bg-slate-50"/>
+                        <Input id='t' name="K" type="number" value={K} onChange={handleChange} className=" bg-slate-50" />
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="wo" className="font-source text-slate-700">
                             Wind speed (Velocity) [m/h]
                         </FieldLabel>
-                        <Input id='wo' name="V" type="number" onChange={handleChange} className=" bg-slate-50"/>
+                        <Input id='wo' name="V" type="number" onChange={handleChange} className=" bg-slate-50" />
                     </Field>
                 </FieldGroup>
 
@@ -198,7 +198,7 @@ export default function Windowcalculations() {
                     <CardContent className="">
                         <h3 className="text-lg font-semibold text-slate-800 mb-4">Results</h3>
                         <div className="space-y-3">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <p className="text-sm text-slate-600">Airflow Rate (Q)</p>
                                     <p className="text-2xl font-bold text-slate-900">{result.Q} m³/h</p>
@@ -211,7 +211,7 @@ export default function Windowcalculations() {
                                 )}
                             </div>
                             <Separator className="my-4" />
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <p className="text-sm text-slate-600">Inlet Area (A<sub>i</sub>)</p>
                                     <p className="text-xl font-bold text-slate-900">{result.Ai} m²</p>
@@ -226,7 +226,7 @@ export default function Windowcalculations() {
                 </Card>
             )}
 
-            <div className="mt-5">
+            <div className="mt-5 overflow-x-auto">
                 <h4 className="text-center text-blue-600 font-semibold mb-3">
                     Live Formula Preview – See the math with your numbers
                 </h4>
@@ -259,7 +259,7 @@ A_o &= \\textbf{${result ? result.Ao.toFixed(3) : '---'}} \\text{ m²}
                 </p>
             </div>
 
-            
+
         </>
     )
 }

@@ -82,7 +82,7 @@ export default function Byelement() {
 
     return (
         <>
-        <h1 className=" font-source font-semibold"> Calculates the total heat flow through a structure found by adding up the heat lost or gained by each of its parts.</h1>
+            <h1 className=" font-source font-semibold"> Calculates the total heat flow through a structure found by adding up the heat lost or gained by each of its parts.</h1>
             <div>
                 <FieldGroup className="mt-5 grid grid-cols-1 gap-4">
                     <Field>
@@ -132,7 +132,7 @@ export default function Byelement() {
                                         </Button>
                                     )}
                                 </div>
-                                <FieldGroup className="grid grid-cols-2 gap-4">
+                                <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <Field>
                                         <FieldLabel className="font-source text-slate-700">
                                             U-value [W/m²·K]
@@ -173,7 +173,7 @@ export default function Byelement() {
                     <CardContent className="">
                         <h3 className="text-lg font-semibold text-slate-800 mb-4">Results</h3>
                         <div className="space-y-3">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <p className="text-sm text-slate-600">Total Heat Load (Q<sub>total</sub>)</p>
                                     <p className="text-2xl font-bold text-slate-900">{result.Q_total} W</p>
@@ -194,7 +194,7 @@ export default function Byelement() {
                 </Card>
             )}
 
-            <div className="mt-5">
+            <div className="mt-5 overflow-x-auto">
                 <h4 className="text-center text-blue-600 font-semibold mb-3">
                     Live Formula Preview – See the math with your numbers
                 </h4>
@@ -217,7 +217,7 @@ Q_{total} &= \\textbf{${result ? result.Q_total.toFixed(2) : '---'}} \\text{ W}
                 </p>
             </div>
 
-            
+
         </>
     )
 }

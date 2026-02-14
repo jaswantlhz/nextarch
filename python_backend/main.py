@@ -107,6 +107,18 @@ class WindowPResponse(BaseModel):
     shade_factor: float = Field(..., description="Shade factor (%)")
 
 
+class SolarHeatGainRequest(BaseModel):
+    area: float = Field(..., description="Area of window glass glazing (m²)")
+    SHGC: float = Field(..., description="Solar Heat Gain Coefficient")
+    projection_factor: float = Field(1.0, description="Projection factor of horizontal shading")
+    solar_irradiation: float = Field(..., description="Solar irradiation (W/m²)")
+
+
+class SolarHeatGainResponse(BaseModel):
+    Q_solar: float = Field(..., description="Equivalent solar heat gain (W)")
+    effective_SHGC: float = Field(..., description="Effective SHGC (SHGC × Projection Factor)")
+
+
 # ==================== Calculation Functions ====================
 
 def calculate_air_volume_sensible(Ks: float, t: float) -> float:
@@ -197,6 +209,16 @@ def shade_factor(heat_gain_shading: float, heat_gain_clear_glass: float) -> floa
     return S
 
 
+def calculate_solar_heat_gain(area: float, shgc: float, projection_factor: float, solar_irradiation: float) -> dict:
+    """Calculate equivalent solar heat gain through glazing
+    Q_solar = Area × Effective_SHGC × I
+    Effective_SHGC = SHGC × Projection_Factor
+    """
+    effective_shgc = shgc * projection_factor
+    q_solar = area * effective_shgc * solar_irradiation
+    return {"Q_solar": q_solar, "effective_SHGC": effective_shgc}
+
+
 # ==================== API Endpoints ====================
 
 @app.get("/")
@@ -210,7 +232,8 @@ async def root():
             "/api/volume-air-forces",
             "/api/q-from-ach",
             "/api/by-element",
-            "/api/window-p"
+            "/api/window-p",
+            "/api/solar-heat-gain"
         ]
     }
 
@@ -331,6 +354,22 @@ async def window_p(request: WindowPRequest):
     
     return WindowPResponse(
         shade_factor=round(S, 2)
+    )
+
+
+@app.post("/api/solar-heat-gain", response_model=SolarHeatGainResponse)
+async def solar_heat_gain(request: SolarHeatGainRequest):
+    """Calculate equivalent solar heat gain through glazing"""
+    result = calculate_solar_heat_gain(
+        area=request.area,
+        shgc=request.SHGC,
+        projection_factor=request.projection_factor,
+        solar_irradiation=request.solar_irradiation
+    )
+    
+    return SolarHeatGainResponse(
+        Q_solar=round(result["Q_solar"], 4),
+        effective_SHGC=round(result["effective_SHGC"], 6)
     )
 
 

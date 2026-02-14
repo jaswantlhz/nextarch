@@ -75,9 +75,9 @@ export default function Qfromach() {
 
     return (
         <>
-        <h1 className=" font-source font-semibold">Calculates Q which is the amount of air supplied to or removed from a space.</h1>
+            <h1 className=" font-source font-semibold">Calculates Q which is the amount of air supplied to or removed from a space.</h1>
             <div>
-                <FieldGroup className="mt-5 grid grid-cols-2">
+                <FieldGroup className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Field>
                         <FieldLabel htmlFor="ACH" className="font-source text-slate-700">
                             Air Changes per Hour (ACH)
@@ -88,25 +88,25 @@ export default function Qfromach() {
                         <FieldLabel htmlFor="V" className="font-source text-slate-700">
                             Room Volume (V) [m³]
                         </FieldLabel>
-                        <Input id='V' name="V" type="number" onChange={handleChange} className=" bg-slate-50"/>
+                        <Input id='V' name="V" type="number" onChange={handleChange} className=" bg-slate-50" />
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="rho" className="font-source text-slate-700">
                             Air Density (ρ) [kg/m³]
                         </FieldLabel>
-                        <Input id='rho' name="rho" type="number" value={rho} onChange={handleChange} className=" bg-slate-50"/>
+                        <Input id='rho' name="rho" type="number" value={rho} onChange={handleChange} className=" bg-slate-50" />
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="Cp" className="font-source text-slate-700">
                             Specific Heat Capacity (C<sub>p</sub>) [J/kg·K]
                         </FieldLabel>
-                        <Input id='Cp' name="Cp" type="number" value={Cp} onChange={handleChange} className=" bg-slate-50"/>
+                        <Input id='Cp' name="Cp" type="number" value={Cp} onChange={handleChange} className=" bg-slate-50" />
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="delta_T" className="font-source text-slate-700">
                             Temperature Difference (ΔT) [K]
                         </FieldLabel>
-                        <Input id='delta_T' name="delta_T" type="number" onChange={handleChange} className=" bg-slate-50"/>
+                        <Input id='delta_T' name="delta_T" type="number" onChange={handleChange} className=" bg-slate-50" />
                     </Field>
                 </FieldGroup>
                 <Button
@@ -123,7 +123,7 @@ export default function Qfromach() {
                     <CardContent className="">
                         <h3 className="text-lg font-semibold text-slate-800 mb-4">Results</h3>
                         <div className="space-y-3">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <p className="text-sm text-slate-600">Heat Load (Q)</p>
                                     <p className="text-2xl font-bold text-slate-900">{result.Q} W</p>
@@ -134,7 +134,7 @@ export default function Qfromach() {
                 </Card>
             )}
 
-            <div className="mt-5">
+            <div className="mt-5 overflow-x-auto">
                 <h4 className="text-center text-blue-600 font-semibold mb-3">
                     Live Formula Preview – See the math with your numbers
                 </h4>
@@ -152,7 +152,7 @@ Q &= \\textbf{${result ? result.Q.toFixed(0) : '---'}} \\text{ W}
                 </p>
             </div>
 
-            
+
         </>
     )
 }

@@ -156,17 +156,17 @@ export default function Voaqwqtforce() {
 
     return (
         <>
-        <h1 className=" font-source font-semibold">Calculates thermal, wind, and combined ventilation flows.</h1>
+            <h1 className=" font-source font-semibold">Calculates thermal, wind, and combined ventilation flows.</h1>
             <div>
                 <FieldGroup className="grid">
-                    
-                    <FieldGroup className="mt-5 grid grid-cols-2">
+
+                    <FieldGroup className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <Field>
-                        <FieldLabel htmlFor="A_inlet" className="font-source text-slate-700">
-                            Free area of inlet opening (A) [m²]
-                        </FieldLabel>
-                        <Input id='A_inlet' name="A_inlet" type="number" onChange={handleChange} className=" bg-slate-50" />
-                    </Field>
+                            <FieldLabel htmlFor="A_inlet" className="font-source text-slate-700">
+                                Free area of inlet opening (A) [m²]
+                            </FieldLabel>
+                            <Input id='A_inlet' name="A_inlet" type="number" onChange={handleChange} className=" bg-slate-50" />
+                        </Field>
                         <Field>
                             <FieldLabel htmlFor="h" className="font-source text-slate-700">
                                 Vertical distance between inlet and outlet (h) [m]
@@ -183,7 +183,7 @@ export default function Voaqwqtforce() {
                             <FieldLabel htmlFor="A_smaller" className="font-source text-slate-700">
                                 Smaller opening area (A<sub>smaller</sub>) [m²]
                             </FieldLabel>
-                            <Input id='A_smaller' name="A_smaller" type="number" onChange={handleChange} className=" bg-slate-50"/>
+                            <Input id='A_smaller' name="A_smaller" type="number" onChange={handleChange} className=" bg-slate-50" />
                         </Field>
                     </FieldGroup>
                     <Separator orientation="horizontal" className="mt-5 mb-5" />
@@ -227,7 +227,7 @@ export default function Voaqwqtforce() {
 
                                     <div className="space-y-2">
                                         <h4 className="font-semibold text-slate-700">Select Date & Time</h4>
-                                        <div className="grid grid-cols-4 gap-3">
+                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                             <Field>
                                                 <Label className="text-xs font-medium text-slate-500 mb-1 block">Day</Label>
                                                 <select
@@ -301,19 +301,19 @@ export default function Voaqwqtforce() {
                         <FieldLabel htmlFor="V" className="font-source text-slate-700">
                             Outdoor wind speed (V) [m/h]
                         </FieldLabel>
-                        <Input id='V' name="V" type="number" value={V} onChange={handleChange} className=" bg-slate-50"/>
+                        <Input id='V' name="V" type="number" value={V} onChange={handleChange} className=" bg-slate-50" />
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="t_o" className="font-source text-slate-700">
                             Outdoor temperature (t<sub>o</sub>) [°C]
                         </FieldLabel>
-                        <Input id='t_o' name="t_o" type="number" value={t_o} onChange={handleChange} className=" bg-slate-50"/>
+                        <Input id='t_o' name="t_o" type="number" value={t_o} onChange={handleChange} className=" bg-slate-50" />
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="K" className="font-source text-slate-700">
                             Effectiveness coefficient (K)
                         </FieldLabel>
-                        <Input id='K' name="K" type="number" value={K} onChange={handleChange} className=" bg-slate-50"/>
+                        <Input id='K' name="K" type="number" value={K} onChange={handleChange} className=" bg-slate-50" />
                     </Field>
                 </FieldGroup>
 
@@ -331,7 +331,7 @@ export default function Voaqwqtforce() {
                     <CardContent className="">
                         <h3 className="text-lg font-semibold text-slate-800 mb-4">Results</h3>
                         <div className="space-y-3">
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
                                     <p className="text-sm text-slate-600">Thermal Flow (Q<sub>t</sub>)</p>
                                     <p className="text-2xl font-bold text-slate-900">{result.Qt} m³/min</p>
@@ -350,7 +350,7 @@ export default function Voaqwqtforce() {
                 </Card>
             )}
 
-            <div className="mt-5">
+            <div className="mt-5 overflow-x-auto">
                 <h4 className="text-center text-blue-600 font-semibold mb-3">
                     Live Formula Preview – See the math with your numbers
                 </h4>
@@ -373,7 +373,7 @@ Q_{combined} &= \\textbf{${result ? result.Q_combined.toFixed(2) : '---'}} \\tex
                 </p>
             </div>
 
-            
+
         </>
     )
 }

@@ -76,32 +76,32 @@ export default function Volumeofairheatgain() {
 
     return (
         <>
-        <h1 className=" font-source font-semibold">Calculates sensible and latent air volumes.</h1>
+            <h1 className=" font-source font-semibold">Calculates sensible and latent air volumes.</h1>
             <div>
-                <FieldGroup className="mt-5 grid grid-cols-2 ">
+                <FieldGroup className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Field>
                         <FieldLabel htmlFor="Ks" className=" font-source text-slate-700"> Sensible heat gained (Ks) [W]</FieldLabel>
-                        <Input id='Ks' name="ks" type="number" onChange={handelchange} className=" bg-slate-50"/>
+                        <Input id='Ks' name="ks" type="number" onChange={handelchange} className=" bg-slate-50" />
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="h" className=" font-source text-slate-700">Vapor pressure difference (h) [mm Hg]</FieldLabel>
-                        <Input id='h' name="h" type="number" onChange={handelchange} className=" bg-slate-50"/>
+                        <Input id='h' name="h" type="number" onChange={handelchange} className=" bg-slate-50" />
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="t" className=" font-source text-slate-700"> Allowable temperature rise (t) [°C]</FieldLabel>
-                        <Input id='t' name="t" type="number" onChange={handelchange} className=" bg-slate-50"/>
+                        <Input id='t' name="t" type="number" onChange={handelchange} className=" bg-slate-50" />
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="wo" className=" font-source text-slate-700"> Specific humidity outside (wo)</FieldLabel>
-                        <Input id='wo' name="wo" type="number" onChange={handelchange} className=" bg-slate-50"/>
+                        <Input id='wo' name="wo" type="number" onChange={handelchange} className=" bg-slate-50" />
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="Kl" className="f font-source text-slate-700"> Latent heat gained (kl) [W]</FieldLabel>
-                        <Input id='Kl' name="kl" type="number" onChange={handelchange} className=" bg-slate-50"/>
+                        <Input id='Kl' name="kl" type="number" onChange={handelchange} className=" bg-slate-50" />
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="wi" className=" font-source text-slate-700"> Specific humidity inside (wi)</FieldLabel>
-                        <Input id='wi' name="wi" type="number" onChange={handelchange} className=" bg-slate-50"/>
+                        <Input id='wi' name="wi" type="number" onChange={handelchange} className=" bg-slate-50" />
                     </Field>
                 </FieldGroup>
                 <Button
@@ -118,7 +118,7 @@ export default function Volumeofairheatgain() {
                     <CardContent className="">
                         <h3 className="text-lg font-semibold text-slate-800 mb-4">Results</h3>
                         <div className="space-y-3">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <p className="text-sm text-slate-600">Sensible Air Volume (Q<sub>s</sub>)</p>
                                     <p className="text-2xl font-bold text-slate-900">{result.Qs.toFixed(1)} m³/h</p>
@@ -129,7 +129,7 @@ export default function Volumeofairheatgain() {
                                 </div>
                             </div>
                             <Separator className="my-4" />
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <p className="text-sm text-slate-600">Latent Air Volume - Humidity (Q<sub>l</sub>)</p>
                                     <p className="text-xl font-bold text-slate-900">{result.Q_humidity.toFixed(1)} m³/h</p>
@@ -152,7 +152,7 @@ export default function Volumeofairheatgain() {
             )}
 
 
-            <div className=" mt-5">
+            <div className="mt-5 overflow-x-auto">
                 <h4 className="text-center text-blue-600 font-semibold mb-3">
                     Live Formula Preview – See the math with your numbers
                 </h4>
@@ -174,7 +174,7 @@ Q_t &\\approx \\textbf{${result ? Math.max(result.Qt_vapor, result.Qt_humidity).
                 </p>
             </div>
 
-            
+
         </>
     )
 }
