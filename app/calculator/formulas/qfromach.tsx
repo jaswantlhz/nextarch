@@ -34,7 +34,7 @@ export default function Qfromach() {
         setLoading(true);
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/q-from-ach`,
+                `${process.env.API_URL}/api/q-from-ach`,
                 {
                     method: "POST",
                     headers: {

@@ -41,7 +41,7 @@ export default function Windowcalculations() {
     const handleCalculate = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/window-calculations`, {
+            const response = await fetch(`${process.env.API_URL}/api/window-calculations`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
