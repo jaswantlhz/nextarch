@@ -34,7 +34,7 @@ export default function SolarHeatGain() {
         setLoading(true);
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/solar-heat-gain`,
+                `${process.env.API_URL}/api/solar-heat-gain`,
                 {
                     method: "POST",
                     headers: {

@@ -46,7 +46,7 @@ export default function Byelement() {
     const handleCalculate = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/by-element`, {
+            const response = await fetch(`${process.env.API_URL}/api/by-element`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
