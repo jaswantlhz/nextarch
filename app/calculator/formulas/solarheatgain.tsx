@@ -1,18 +1,11 @@
-import {
-    Field,
-    FieldContent,
-    FieldGroup,
-    FieldLabel,
-    FieldLegend,
-    FieldSet,
-} from "@/components/ui/field"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ChangeEvent, useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import "katex/dist/katex.min.css"
-import { BlockMath, InlineMath } from "react-katex"
-import { Separator } from "@/components/ui/separator"
+"use client";
+
+import { useState } from "react";
+import { MetricCard, ResultCard } from "../dashboard-components";
+import { Button } from "@/components/ui/button";
+import { FileText, ArrowLeft } from "lucide-react";
+import "katex/dist/katex.min.css";
+import { BlockMath } from "react-katex";
 
 interface ResultData {
     Q_solar: number;
@@ -20,126 +13,181 @@ interface ResultData {
 }
 
 export default function SolarHeatGain() {
-
     const [values, setvalues] = useState({
         area: 0,
         shgc: 0,
         projection_factor: 1,
         solar_irradiation: 0,
-    })
+    });
 
     const [result, setResult] = useState<ResultData | null>(null);
     const [loading, setLoading] = useState(false);
 
-    const handelchange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        setvalues(prev => ({ ...prev, [name]: Number(value), }))
-    }
-    const { area, shgc, projection_factor, solar_irradiation } = values
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setvalues((prev) => ({ ...prev, [name]: parseFloat(value) || 0 }));
+    };
+
+    const { area, shgc, projection_factor, solar_irradiation } = values;
 
     const handleCalculate = async () => {
         setLoading(true);
         try {
-            const response = await fetch('https://archbackend.vercel.app/api/solar-heat-gain', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    area: area,
-                    SHGC: shgc,
-                    projection_factor: projection_factor,
-                    solar_irradiation: solar_irradiation,
-                }),
-            });
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/solar-heat-gain`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        area: area,
+                        SHGC: shgc,
+                        projection_factor: projection_factor,
+                        solar_irradiation: solar_irradiation,
+                    }),
+                }
+            );
 
             if (!response.ok) {
-                throw new Error('API request failed');
+                throw new Error("API request failed");
             }
 
             const data = await response.json();
             setResult(data);
         } catch (error) {
-            console.error('Error calculating:', error);
-            alert('Error calculating. Please ensure the API is running on http://localhost:8000');
+            console.error("Error calculating:", error);
+            alert(
+                "Error calculating. Please ensure the API is running on http://localhost:8000"
+            );
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <>
-            <h1 className=" font-source font-semibold">Calculates Equivalent Solar Heat Gain through glazing.</h1>
-            <div>
-                <FieldGroup className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Field>
-                        <FieldLabel htmlFor="area" className=" font-source text-slate-700"> Area of Window Glass Glazing (A) [m²]</FieldLabel>
-                        <Input id='area' name="area" type="number" onChange={handelchange} className=" bg-slate-50" />
-                    </Field>
-                    <Field>
-                        <FieldLabel htmlFor="shgc" className=" font-source text-slate-700">Solar Heat Gain Coefficient (SHGC)</FieldLabel>
-                        <Input id='shgc' name="shgc" type="number" step="0.01" onChange={handelchange} className=" bg-slate-50" />
-                    </Field>
-                    <Field>
-                        <FieldLabel htmlFor="projection_factor" className=" font-source text-slate-700"> Projection Factor of Horizontal Shading (PF)</FieldLabel>
-                        <Input id='projection_factor' name="projection_factor" type="number" step="0.01" defaultValue={1} onChange={handelchange} className=" bg-slate-50" />
-                    </Field>
-                    <Field>
-                        <FieldLabel htmlFor="solar_irradiation" className=" font-source text-slate-700"> Solar Irradiation (I) [W/m²]</FieldLabel>
-                        <Input id='solar_irradiation' name="solar_irradiation" type="number" onChange={handelchange} className=" bg-slate-50" />
-                    </Field>
-                </FieldGroup>
-                <Button
-                    variant={"destructive"}
-                    className=" mt-5 w-30 border-slate-300 "
-                    onClick={handleCalculate}
-                    disabled={loading}
-                >
-                    {loading ? 'Calculating...' : 'Calculate'}
-                </Button>
+        <div className="space-y-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold text-white mb-2">
+                        Equivalent Solar Heat Gain
+                    </h1>
+                    <p className="text-gray-400 max-w-2xl">
+                        Calculates the heat gain through glazing considering shading and solar
+                        irradiation.
+                    </p>
+                </div>
             </div>
-            {result && (
-                <Card className="mt-5 bg-blue-50 border-blue-200">
-                    <CardContent className="">
-                        <h3 className="text-lg font-semibold text-slate-800 mb-4">Results</h3>
-                        <div className="space-y-3">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left Column - Inputs */}
+                <div className="lg:col-span-8 space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <MetricCard
+                            label="Window Area (A)"
+                            value={area}
+                            unit="m²"
+                            name="area"
+                            onChange={handleChange}
+                        />
+                        <MetricCard
+                            label="SHGC"
+                            value={shgc}
+                            unit=""
+                            name="shgc"
+                            step={0.01}
+                            onChange={handleChange}
+                        />
+                        <MetricCard
+                            label="Projection Factor (PF)"
+                            value={projection_factor}
+                            unit=""
+                            name="projection_factor"
+                            step={0.1}
+                            onChange={handleChange}
+                        />
+                        <MetricCard
+                            label="Solar Irradiation (I)"
+                            value={solar_irradiation}
+                            unit="W/m²"
+                            name="solar_irradiation"
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="flex justify-end">
+                        <Button
+                            onClick={handleCalculate}
+                            disabled={loading}
+                            className="bg-[#1A73E8] hover:bg-[#1557B0] text-white px-8 py-6 rounded-xl font-semibold text-lg"
+                        >
+                            {loading ? "Calculating..." : "Calculate Gain"}
+                        </Button>
+                    </div>
+
+                    {/* Live Formula Preview */}
+                    <div className="bg-[#0f1623] border border-white/5 rounded-2xl p-6 relative">
+                        <div className="flex justify-between items-center mb-8">
+                            <h3 className="text-[#1A73E8] text-xs font-bold uppercase tracking-wider">
+                                LIVE FORMULA PREVIEW
+                            </h3>
+                            <ArrowLeft className="text-white/20 h-5 w-5" />
+                        </div>
+
+                        <div className="text-white text-2xl flex justify-center py-8 mb-8">
+                            <BlockMath
+                                math={`
+                                    Q_{\\text{solar}} = A \\times (\\text{SHGC} \\times \\text{PF}) \\times I
+                                `}
+                            />
+                        </div>
+
+                        <div className="bg-[#131B2C] rounded-xl p-4 font-mono text-sm space-y-3">
+                            <div className="flex items-start gap-4 mx-4 my-2">
+                                <span className="text-gray-500 uppercase tracking-wider text-xs mt-1 w-24">STEP</span>
+                                <span className="text-[#1A73E8] break-all">
+                                    {result
+                                        ? `Q = ${area} × (${shgc} × ${projection_factor}) × ${solar_irradiation}`
+                                        : "Q = A × (SHGC × PF) × I"
+                                    }
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-4 mx-4 my-2">
+                                <span className="text-gray-500 uppercase tracking-wider text-xs w-24">IMPLEMENTATION:</span>
+                                <span className="text-green-400 font-bold">
+                                    {result ? result.Q_solar.toFixed(3) : "Wait for calc..."}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Column - Results */}
+                <div className="lg:col-span-4 space-y-6">
+                    <ResultCard
+                        label="Solar Heat Gain (Q)"
+                        value={result ? result.Q_solar.toFixed(2) : "---"}
+                        unit="W"
+                    />
+
+                    {result && (
+                        <div className="bg-[#131B2C] border border-white/10 rounded-2xl p-6 space-y-4">
+                            <h4 className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">
+                                Parameters
+                            </h4>
+                            <div className="space-y-4">
                                 <div>
-                                    <p className="text-sm text-slate-600">Effective SHGC</p>
-                                    <p className="text-2xl font-bold text-slate-900">{result.effective_SHGC.toFixed(4)}</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-slate-600">Equivalent Solar Heat Gain (Q<sub>solar</sub>)</p>
-                                    <p className="text-2xl font-bold text-slate-900">{result.Q_solar.toFixed(2)} W</p>
+                                    <p className="text-gray-500 text-xs">Effective SHGC</p>
+                                    <p className="text-xl font-bold text-white">
+                                        {result.effective_SHGC.toFixed(3)}
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
-            )}
+                    )}
 
 
-            <div className="mt-5 overflow-x-auto">
-                <h4 className="text-center text-blue-600 font-semibold mb-3">
-                    Live Formula Preview – See the math with your numbers
-                </h4>
-                <BlockMath
-                    math={`
-\\begin{align*}
-\\text{Effective SHGC} &= \\text{SHGC} \\times \\text{Projection Factor} \\\\[10pt]
-\\text{Effective SHGC} &= ${shgc} \\times ${projection_factor} = \\textbf{${result ? result.effective_SHGC.toFixed(4) : '---'}} \\\\[15pt]
-Q_{\\text{solar}} &= A \\times \\text{Effective SHGC} \\times I \\quad [W] \\\\[10pt]
-Q_{\\text{solar}} &= ${area} \\times ${result ? result.effective_SHGC.toFixed(4) : '---'} \\times ${solar_irradiation} \\\\[10pt]
-Q_{\\text{solar}} &= \\textbf{${result ? result.Q_solar.toFixed(2) : '---'}} \\text{ W}
-\\end{align*}
-`}
-                />
-                <p className="text-center text-sm text-slate-500 mt-2">
-                    Equations update live as you change any input
-                </p>
+                </div>
             </div>
-
-
-        </>
-    )
+        </div>
+    );
 }

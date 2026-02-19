@@ -1,22 +1,13 @@
-import {
-    Field,
-    FieldContent,
-    FieldGroup,
-    FieldLabel,
-    FieldLegend,
-    FieldSet,
-    FieldDescription
-} from "@/components/ui/field"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ChangeEvent, useState } from "react"
-import { Separator } from "@/components/ui/separator"
+"use client";
 
-import "katex/dist/katex.min.css"
-import { BlockMath, InlineMath } from "react-katex"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardTitle } from "@/components/ui/card"
-import { InfoIcon, LucideFileText, Plus, Trash2 } from "lucide-react"
+import { useState } from "react";
+import { MetricCard, ResultCard } from "../dashboard-components";
+import { Button } from "@/components/ui/button";
+import { FileText, Plus, Trash2, Layers, ArrowRight, ArrowLeft } from "lucide-react";
+import "katex/dist/katex.min.css";
+import { BlockMath } from "react-katex";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface Element {
     U: number;
@@ -38,7 +29,7 @@ export default function Byelement() {
 
     const handleElementChange = (index: number, field: 'U' | 'A', value: string) => {
         const newElements = [...elements];
-        newElements[index][field] = Number(value);
+        newElements[index][field] = parseFloat(value) || 0;
         setElements(newElements);
     };
 
@@ -55,7 +46,7 @@ export default function Byelement() {
     const handleCalculate = async () => {
         setLoading(true);
         try {
-            const response = await fetch('https://archbackend.vercel.app/api/by-element', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/by-element`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -81,143 +72,165 @@ export default function Byelement() {
     };
 
     return (
-        <>
-            <h1 className=" font-source font-semibold"> Calculates the total heat flow through a structure found by adding up the heat lost or gained by each of its parts.</h1>
-            <div>
-                <FieldGroup className="mt-5 grid grid-cols-1 gap-4">
-                    <Field>
-                        <FieldLabel htmlFor="deltaT" className="font-source text-slate-700">
-                            Temperature Difference (ΔT) [K]
-                        </FieldLabel>
-                        <Input
-                            id='deltaT'
-                            name="deltaT"
-                            type="number"
+        <div className="space-y-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold text-white mb-2">Heat Flow by Element</h1>
+                    <p className="text-gray-400 max-w-2xl">
+                        Calculates total heat flow through a structure by summing heat lost or gained by each component.
+                    </p>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left Column - Inputs */}
+                <div className="lg:col-span-8 space-y-6">
+                    {/* Global Input */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <MetricCard
+                            label="Temp. Diff (ΔT)"
                             value={deltaT}
-                            onChange={(e) => setDeltaT(Number(e.target.value))}
-                            className=" bg-slate-100"
+                            unit="K"
+                            name="deltaT"
+                            onChange={(e) => setDeltaT(parseFloat(e.target.value) || 0)}
                         />
-                    </Field>
-                </FieldGroup>
+                    </div>
 
-                <Separator orientation="horizontal" className="mt-5 mb-5" />
+                    {/* Dynamic Elements List */}
+                    <div className="bg-[#131B2C] border border-white/10 rounded-2xl p-6">
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-3">
+                                <div className="bg-[#1A73E8]/10 p-2 rounded-lg">
+                                    <Layers className="text-[#1A73E8] h-5 w-5" />
+                                </div>
+                                <h4 className="text-white font-medium">Building Elements</h4>
+                            </div>
+                            <Button
+                                onClick={addElement}
+                                className="bg-[#1A73E8]/10 hover:bg-[#1A73E8]/20 text-[#1A73E8] border border-[#1A73E8]/20"
+                            >
+                                <Plus className="mr-2 h-4 w-4" />
+                                Add Element
+                            </Button>
+                        </div>
 
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold text-slate-700">Building Elements</h3>
+                        <div className="space-y-4">
+                            {elements.map((element, index) => (
+                                <div key={index} className="bg-[#0B1121] rounded-xl p-4 border border-white/5 relative group transition-all hover:border-white/10">
+                                    <div className="flex flex-wrap md:flex-nowrap items-end gap-4">
+                                        <div className="flex-1 min-w-[140px]">
+                                            <Label className="text-xs text-gray-500 mb-1.5 block">U-value (W/m²·K)</Label>
+                                            <Input
+                                                type="number"
+                                                value={element.U}
+                                                onChange={(e) => handleElementChange(index, 'U', e.target.value)}
+                                                className="bg-[#131B2C] border-white/10 text-white focus:ring-[#1A73E8] h-10"
+                                            />
+                                        </div>
+                                        <div className="flex items-center justify-center pb-2 text-gray-600">
+                                            <ArrowRight className="h-4 w-4" />
+                                        </div>
+                                        <div className="flex-1 min-w-[140px]">
+                                            <Label className="text-xs text-gray-500 mb-1.5 block">Area (m²)</Label>
+                                            <Input
+                                                type="number"
+                                                value={element.A}
+                                                onChange={(e) => handleElementChange(index, 'A', e.target.value)}
+                                                className="bg-[#131B2C] border-white/10 text-white focus:ring-[#1A73E8] h-10"
+                                            />
+                                        </div>
+
+                                        {elements.length > 1 && (
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => removeElement(index)}
+                                                className="text-gray-500 hover:text-red-400 hover:bg-transparent h-10 w-10 shrink-0"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        )}
+                                    </div>
+                                    <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-[#131B2C] border border-white/10 rounded-full flex items-center justify-center text-xs font-mono text-gray-400">
+                                        {index + 1}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="flex justify-end">
                         <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={addElement}
-                            className="border-slate-300"
+                            onClick={handleCalculate}
+                            disabled={loading}
+                            className="bg-[#1A73E8] hover:bg-[#1557B0] text-white px-8 py-6 rounded-xl font-semibold text-lg"
                         >
-                            <Plus className="mr-2 size-4" />
-                            Add Element
+                            {loading ? 'Calculating...' : 'Calculate Total Flow'}
                         </Button>
                     </div>
 
-                    {elements.map((element, index) => (
-                        <Card key={index} className="bg-slate-50">
-                            <CardContent className="pt-4">
-                                <div className="flex items-center justify-between mb-2">
-                                    <CardTitle className="text-sm font-medium">Element {index + 1}</CardTitle>
-                                    {elements.length > 1 && (
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => removeElement(index)}
-                                            className="text-red-600 hover:text-red-700"
-                                        >
-                                            <Trash2 className="size-4" />
-                                        </Button>
-                                    )}
-                                </div>
-                                <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <Field>
-                                        <FieldLabel className="font-source text-slate-700">
-                                            U-value [W/m²·K]
-                                        </FieldLabel>
-                                        <Input
-                                            type="number"
-                                            value={element.U}
-                                            onChange={(e) => handleElementChange(index, 'U', e.target.value)}
-                                        />
-                                    </Field>
-                                    <Field>
-                                        <FieldLabel className="font-source text-slate-700">
-                                            Area [m²]
-                                        </FieldLabel>
-                                        <Input
-                                            type="number"
-                                            value={element.A}
-                                            onChange={(e) => handleElementChange(index, 'A', e.target.value)}
-                                        />
-                                    </Field>
-                                </FieldGroup>
-                            </CardContent>
-                        </Card>
-                    ))}
+                    {/* Live Formula Preview */}
+                    <div className="bg-[#0f1623] border border-white/5 rounded-2xl p-6 relative">
+                        <div className="flex justify-between items-center mb-8">
+                            <h3 className="text-[#1A73E8] text-xs font-bold uppercase tracking-wider">
+                                LIVE FORMULA PREVIEW
+                            </h3>
+                            <ArrowLeft className="text-white/20 h-5 w-5" />
+                        </div>
+
+                        <div className="text-white text-2xl flex justify-center py-8 mb-8">
+                            <BlockMath
+                                math={`
+                                    Q_{total} = (\\sum (U_i \\times A_i)) \\times \\Delta T
+                                `}
+                            />
+                        </div>
+
+                        <div className="bg-[#131B2C] rounded-xl p-4 font-mono text-sm space-y-3">
+                            <div className="flex items-start gap-4 mx-4 my-2">
+                                <span className="text-gray-500 uppercase tracking-wider text-xs mt-1 w-24">STEP</span>
+                                <span className="text-[#1A73E8] break-all">
+                                    {result
+                                        ? `Q = (${elements.map(e => (e.U * e.A).toFixed(1)).join(' + ')}) × ${deltaT}`
+                                        : "Q = (Σ U × A) × ΔT"
+                                    }
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-4 mx-4 my-2">
+                                <span className="text-gray-500 uppercase tracking-wider text-xs w-24">IMPLEMENTATION:</span>
+                                <span className="text-green-400 font-bold">
+                                    {result ? result.Q_total.toFixed(3) : "Wait for calc..."}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <Button
-                    variant={"destructive"}
-                    className="mt-5 w-30 border-slate-300 "
-                    onClick={handleCalculate}
-                    disabled={loading}
-                >
-                    {loading ? 'Calculating...' : 'Calculate'}
-                </Button>
-            </div>
-            {result && (
-                <Card className="mt-5 bg-blue-50 border-blue-200">
-                    <CardContent className="">
-                        <h3 className="text-lg font-semibold text-slate-800 mb-4">Results</h3>
-                        <div className="space-y-3">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <p className="text-sm text-slate-600">Total Heat Load (Q<sub>total</sub>)</p>
-                                    <p className="text-2xl font-bold text-slate-900">{result.Q_total} W</p>
-                                </div>
-                            </div>
-                            <Separator className="my-4" />
-                            <div>
-                                <p className="text-sm font-semibold text-slate-700 mb-2">Element UA Values:</p>
+                {/* Right Column - Results */}
+                <div className="lg:col-span-4 space-y-6">
+                    <ResultCard
+                        label="Total Heat Flow"
+                        value={result ? result.Q_total.toFixed(2) : "---"}
+                        unit="W"
+                    />
+
+                    {result && (
+                        <div className="bg-[#131B2C] border border-white/10 rounded-2xl p-6 space-y-4">
+                            <h4 className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Element Breakdown (UA)</h4>
+                            <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                                 {result.elements_UA.map((ua, index) => (
-                                    <div key={index} className="flex justify-between py-1">
-                                        <span className="text-slate-600">Element {index + 1}:</span>
-                                        <span className="font-mono text-slate-900">{ua} W/K</span>
+                                    <div key={index} className="flex justify-between items-center bg-[#0B1121] p-3 rounded-lg border border-white/5">
+                                        <span className="text-gray-400 text-sm">Element {index + 1}</span>
+                                        <span className="font-mono text-white font-medium">{ua.toFixed(2)} <span className="text-xs text-gray-600">W/K</span></span>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
-            )}
+                    )}
 
-            <div className="mt-5 overflow-x-auto">
-                <h4 className="text-center text-blue-600 font-semibold mb-3">
-                    Live Formula Preview – See the math with your numbers
-                </h4>
-                <BlockMath
-                    math={`
-\\begin{align*}
-${elements.map((elem, idx) =>
-                        `UA_{${idx + 1}} &= U_${idx + 1} \\times A_${idx + 1} = ${elem.U} \\times ${elem.A} = ${(elem.U * elem.A).toFixed(2)} \\text{ W/K} \\\\[8pt]`
-                    ).join('\n')}
-UA_{total} &= ${elements.map((elem, idx) => `UA_{${idx + 1}}`).join(' + ')} \\\\[8pt]
-UA_{total} &= ${elements.map(elem => (elem.U * elem.A).toFixed(2)).join(' + ')} = ${elements.reduce((sum, elem) => sum + (elem.U * elem.A), 0).toFixed(2)} \\text{ W/K} \\\\[12pt]
-Q_{total} &= UA_{total} \\times \\Delta T \\\\[8pt]
-Q_{total} &= ${elements.reduce((sum, elem) => sum + (elem.U * elem.A), 0).toFixed(2)} \\times ${deltaT} \\\\[8pt]
-Q_{total} &= \\textbf{${result ? result.Q_total.toFixed(2) : '---'}} \\text{ W}
-\\end{align*}
-`}
-                />
-                <p className="text-center text-sm text-slate-500 mt-2">
-                    Equation updates live as you change any input
-                </p>
+
+                </div>
             </div>
-
-
-        </>
-    )
+        </div>
+    );
 }

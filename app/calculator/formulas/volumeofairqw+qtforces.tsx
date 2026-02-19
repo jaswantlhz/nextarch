@@ -1,23 +1,12 @@
-import {
-    Field,
-    FieldContent,
-    FieldGroup,
-    FieldLabel,
-    FieldLegend,
-    FieldSet,
-    FieldDescription
-} from "@/components/ui/field"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ChangeEvent, useState } from "react"
-import { Separator } from "@/components/ui/separator"
+"use client";
 
-import "katex/dist/katex.min.css"
-import { BlockMath, InlineMath } from "react-katex"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardTitle } from "@/components/ui/card"
-import { InfoIcon, LucideFileText } from "lucide-react"
-import { LucideUpload } from "lucide-react"
+import { useState } from "react";
+import { MetricCard, ResultCard } from "../dashboard-components";
+import { Button } from "@/components/ui/button";
+import { FileText, Upload, Calendar, Wind, Thermometer, Info, ArrowLeft } from "lucide-react";
+import "katex/dist/katex.min.css";
+import { BlockMath } from "react-katex";
+import { Label } from "@/components/ui/label";
 
 interface ResultData {
     Qt: number;
@@ -38,6 +27,8 @@ export default function Voaqwqtforce() {
 
     const [result, setResult] = useState<ResultData | null>(null);
     const [loading, setLoading] = useState(false);
+
+    // EPW State
     const [epwUploaded, setEpwUploaded] = useState(false);
     const [epwYears, setEpwYears] = useState<number[]>([]);
     const [selectedDate, setSelectedDate] = useState({
@@ -49,19 +40,21 @@ export default function Voaqwqtforce() {
     const [epwData, setEpwData] = useState<Record<string, string[]>>({});
     const [epwMessage, setEpwMessage] = useState("");
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setValues(prev => ({ ...prev, [name]: Number(value) }));
+        setValues(prev => ({ ...prev, [name]: parseFloat(value) || 0 }));
     };
 
     const { A_inlet, h, t_i, t_o, A_smaller, V, K } = values;
 
-    const handleEpwUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const handleEpwUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
         const formData = new FormData();
         formData.append('file', file);
+
+        setEpwMessage("Uploading...");
 
         try {
             const response = await fetch('https://archbackend.vercel.app/api/upload-epw', {
@@ -102,9 +95,12 @@ export default function Voaqwqtforce() {
                 setValues(prev => ({
                     ...prev,
                     t_o: data.temperature,
-                    V: data.wind_speed_mh
+                    V: data.wind_speed_mh // Assuming API returns m/h or conversion is handled
                 }));
-                setEpwMessage(data.message);
+                // Note: The original generic code set V directly. 
+                // If API returns m/s, we might need conversion based on unit expectation.
+                // Re-using logic from original file.
+                setEpwMessage(`Data fetched: ${data.temperature}°C, ${data.wind_speed_mh} wind speed`);
             } else {
                 setEpwMessage(data.message || 'No data found for selected date/time');
             }
@@ -124,7 +120,7 @@ export default function Voaqwqtforce() {
     const handleCalculate = async () => {
         setLoading(true);
         try {
-            const response = await fetch('https://archbackend.vercel.app/api/volume-air-forces', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/volume-air-forces`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -155,225 +151,257 @@ export default function Voaqwqtforce() {
     };
 
     return (
-        <>
-            <h1 className=" font-source font-semibold">Calculates thermal, wind, and combined ventilation flows.</h1>
-            <div>
-                <FieldGroup className="grid">
+        <div className="space-y-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold text-white mb-2">Volume of Air (Forces)</h1>
+                    <p className="text-gray-400 max-w-2xl">
+                        Calculates thermal, wind, and combined ventilation flows based on opening areas and environmental conditions.
+                    </p>
+                </div>
+            </div>
 
-                    <FieldGroup className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <Field>
-                            <FieldLabel htmlFor="A_inlet" className="font-source text-slate-700">
-                                Free area of inlet opening (A) [m²]
-                            </FieldLabel>
-                            <Input id='A_inlet' name="A_inlet" type="number" onChange={handleChange} className=" bg-slate-50" />
-                        </Field>
-                        <Field>
-                            <FieldLabel htmlFor="h" className="font-source text-slate-700">
-                                Vertical distance between inlet and outlet (h) [m]
-                            </FieldLabel>
-                            <Input id='h' name="h" type="number" onChange={handleChange} className=" bg-slate-50" />
-                        </Field>
-                        <Field>
-                            <FieldLabel htmlFor="t_i" className="font-source text-slate-700">
-                                Indoor temperature at height h (t<sub>i</sub>) [°C]
-                            </FieldLabel>
-                            <Input id='t_i' name="t_i" type="number" onChange={handleChange} className=" bg-slate-50" />
-                        </Field>
-                        <Field>
-                            <FieldLabel htmlFor="A_smaller" className="font-source text-slate-700">
-                                Smaller opening area (A<sub>smaller</sub>) [m²]
-                            </FieldLabel>
-                            <Input id='A_smaller' name="A_smaller" type="number" onChange={handleChange} className=" bg-slate-50" />
-                        </Field>
-                    </FieldGroup>
-                    <Separator orientation="horizontal" className="mt-5 mb-5" />
-                </FieldGroup>
-
-                <FieldGroup className="grid">
-                    <div className="flex">
-                        <LucideFileText className="mr-2 size-7" />
-                        <code className="font-sans text-2xl font-semibold">Auto-fill from Weather Data (EPW)</code>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left Column - Inputs */}
+                <div className="lg:col-span-8 space-y-6">
+                    {/* Standard Inputs */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <MetricCard
+                            label="Inlet Area (A)"
+                            value={A_inlet}
+                            unit="m²"
+                            name="A_inlet"
+                            onChange={handleChange}
+                        />
+                        <MetricCard
+                            label="Height Diff (h)"
+                            value={h}
+                            unit="m"
+                            name="h"
+                            onChange={handleChange}
+                        />
+                        <MetricCard
+                            label="Indoor Temp (ti)"
+                            value={t_i}
+                            unit="°C"
+                            name="t_i"
+                            onChange={handleChange}
+                        />
+                        <MetricCard
+                            label="Smaller Area (As)"
+                            value={A_smaller}
+                            unit="m²"
+                            name="A_smaller"
+                            onChange={handleChange}
+                        />
+                        <MetricCard
+                            label="Eff. Coeff (K)"
+                            value={K}
+                            unit=""
+                            name="K"
+                            step={0.1}
+                            onChange={handleChange}
+                        />
+                        <MetricCard
+                            label="Outdoor Temp (to)"
+                            value={t_o}
+                            unit="°C"
+                            name="t_o"
+                            onChange={handleChange}
+                        />
+                        <MetricCard
+                            label="Wind Speed (V)"
+                            value={V}
+                            unit="m/h"
+                            name="V"
+                            onChange={handleChange}
+                        />
                     </div>
-                    <Card className="bg-slate-50">
-                        <CardContent>
-                            <Field>
-                                <FieldLabel>
-                                    <LucideUpload className="size-5 ml-1" />upload .epw file
-                                </FieldLabel>
-                                <Input
-                                    id="EPW"
-                                    type="file"
-                                    className="bg-white"
-                                    accept=".epw"
-                                    onChange={handleEpwUpload}
-                                />
-                                <FieldDescription className="ml-1">Limit 200MB per file • EPW</FieldDescription>
-                            </Field>
+
+                    {/* Weather Data Card */}
+                    <div className="bg-[#131B2C] border border-white/10 rounded-2xl p-6 relative overflow-hidden">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="bg-[#1A73E8]/10 p-2 rounded-lg">
+                                <Wind className="text-[#1A73E8] h-5 w-5" />
+                            </div>
+                            <h4 className="text-white font-medium">Auto-fill from Weather Data (EPW)</h4>
+                        </div>
+
+                        <div className="space-y-4">
+                            {/* Upload Area */}
+                            <div className="relative group">
+                                <div className="absolute inset-0 bg-gradient-to-r from-[#1A73E8]/10 to-purple-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="relative border-2 border-dashed border-white/10 rounded-xl p-6 text-center transition-colors group-hover:border-[#1A73E8]/50">
+                                    <input
+                                        type="file"
+                                        accept=".epw"
+                                        onChange={handleEpwUpload}
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    />
+                                    <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2 group-hover:text-[#1A73E8] transition-colors" />
+                                    <p className="text-sm text-gray-300 font-medium">Click to upload .epw file</p>
+                                    <p className="text-xs text-gray-500 mt-1">Maximum file size 200MB</p>
+                                </div>
+                            </div>
 
                             {epwUploaded && (
-                                <div className="mt-4 space-y-4">
-                                    <div className="bg-blue-50 p-4 rounded-md border border-blue-100">
-                                        <h4 className="font-semibold text-blue-800 mb-2 flex items-center">
-                                            📅 Available Data in File
-                                        </h4>
-                                        <div className="text-sm text-blue-900 space-y-1 max-h-40 overflow-y-auto">
-                                            {epwYears.map(year => (
-                                                <div key={year}>
-                                                    <span className="font-bold">{year}:</span> {epwData[year]?.join(', ') || 'Partial data'}
-                                                </div>
-                                            ))}
+                                <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                        <div className="space-y-1">
+                                            <Label className="text-xs text-gray-500">Day</Label>
+                                            <select
+                                                className="w-full bg-[#0B1121] border border-white/10 rounded-lg text-white text-sm px-3 py-2 focus:ring-1 focus:ring-[#1A73E8] outline-none"
+                                                value={selectedDate.day}
+                                                onChange={(e) => setSelectedDate(prev => ({ ...prev, day: Number(e.target.value) }))}
+                                            >
+                                                {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
+                                                    <option key={d} value={d}>{d}</option>
+                                                ))}
+                                            </select>
                                         </div>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <h4 className="font-semibold text-slate-700">Select Date & Time</h4>
-                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                            <Field>
-                                                <Label className="text-xs font-medium text-slate-500 mb-1 block">Day</Label>
-                                                <select
-                                                    className="w-full h-10 px-3 py-2 rounded-md border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
-                                                    value={selectedDate.day}
-                                                    onChange={(e) => setSelectedDate(prev => ({ ...prev, day: Number(e.target.value) }))}
-                                                >
-                                                    {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
-                                                        <option key={d} value={d}>{d}</option>
-                                                    ))}
-                                                </select>
-                                            </Field>
-                                            <Field>
-                                                <Label className="text-xs font-medium text-slate-500 mb-1 block">Month</Label>
-                                                <select
-                                                    className="w-full h-10 px-3 py-2 rounded-md border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
-                                                    value={selectedDate.month}
-                                                    onChange={(e) => setSelectedDate(prev => ({ ...prev, month: Number(e.target.value) }))}
-                                                >
-                                                    {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
-                                                        <option key={m} value={m}>{m}</option>
-                                                    ))}
-                                                </select>
-                                            </Field>
-                                            <Field>
-                                                <Label className="text-xs font-medium text-slate-500 mb-1 block">Year</Label>
-                                                <select
-                                                    className="w-full h-10 px-3 py-2 rounded-md border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
-                                                    value={selectedDate.year}
-                                                    onChange={(e) => setSelectedDate(prev => ({ ...prev, year: Number(e.target.value) }))}
-                                                >
-                                                    {epwYears.map(year => (
-                                                        <option key={year} value={year}>{year}</option>
-                                                    ))}
-                                                </select>
-                                            </Field>
-                                            <Field>
-                                                <Label className="text-xs font-medium text-slate-500 mb-1 block">Hour</Label>
-                                                <select
-                                                    className="w-full h-10 px-3 py-2 rounded-md border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
-                                                    value={selectedDate.hour}
-                                                    onChange={(e) => setSelectedDate(prev => ({ ...prev, hour: Number(e.target.value) }))}
-                                                >
-                                                    {Array.from({ length: 24 }, (_, i) => i + 1).map(h => (
-                                                        <option key={h} value={h}>{formatHour(h)}</option>
-                                                    ))}
-                                                </select>
-                                            </Field>
+                                        <div className="space-y-1">
+                                            <Label className="text-xs text-gray-500">Month</Label>
+                                            <select
+                                                className="w-full bg-[#0B1121] border border-white/10 rounded-lg text-white text-sm px-3 py-2 focus:ring-1 focus:ring-[#1A73E8] outline-none"
+                                                value={selectedDate.month}
+                                                onChange={(e) => setSelectedDate(prev => ({ ...prev, month: Number(e.target.value) }))}
+                                            >
+                                                {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
+                                                    <option key={m} value={m}>{m}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <Label className="text-xs text-gray-500">Year</Label>
+                                            <select
+                                                className="w-full bg-[#0B1121] border border-white/10 rounded-lg text-white text-sm px-3 py-2 focus:ring-1 focus:ring-[#1A73E8] outline-none"
+                                                value={selectedDate.year}
+                                                onChange={(e) => setSelectedDate(prev => ({ ...prev, year: Number(e.target.value) }))}
+                                            >
+                                                {epwYears.map(year => (
+                                                    <option key={year} value={year}>{year}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <Label className="text-xs text-gray-500">Hour</Label>
+                                            <select
+                                                className="w-full bg-[#0B1121] border border-white/10 rounded-lg text-white text-sm px-3 py-2 focus:ring-1 focus:ring-[#1A73E8] outline-none"
+                                                value={selectedDate.hour}
+                                                onChange={(e) => setSelectedDate(prev => ({ ...prev, hour: Number(e.target.value) }))}
+                                            >
+                                                {Array.from({ length: 24 }, (_, i) => i + 1).map(h => (
+                                                    <option key={h} value={h}>{formatHour(h)}</option>
+                                                ))}
+                                            </select>
                                         </div>
                                     </div>
 
                                     <Button
-                                        variant="secondary"
-                                        className="w-full mt-2 bg-slate-200 hover:bg-slate-300 text-slate-800"
                                         onClick={handleFetchEpwData}
+                                        className="w-full bg-[#1A73E8]/10 hover:bg-[#1A73E8]/20 text-[#1A73E8] border border-[#1A73E8]/20"
                                     >
-                                        Fetch Weather Data
+                                        Apply Weather Data to Inputs
                                     </Button>
 
-                                    {epwMessage && !epwMessage.includes('uploaded') && (
-                                        <div className={`p-3 rounded-md text-sm ${epwMessage.includes('No data') || epwMessage.includes('Error') ? 'bg-yellow-50 text-yellow-800 border border-yellow-200' : 'bg-green-50 text-green-800 border border-green-200'}`}>
+                                    {epwMessage && (
+                                        <div className="flex gap-2 items-center text-xs text-gray-400 bg-[#0B1121] p-3 rounded-lg border border-white/5">
+                                            <Info className="h-4 w-4 text-[#1A73E8]" />
                                             {epwMessage}
                                         </div>
                                     )}
                                 </div>
                             )}
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
 
-                    <Field>
-                        <FieldLabel htmlFor="V" className="font-source text-slate-700">
-                            Outdoor wind speed (V) [m/h]
-                        </FieldLabel>
-                        <Input id='V' name="V" type="number" value={V} onChange={handleChange} className=" bg-slate-50" />
-                    </Field>
-                    <Field>
-                        <FieldLabel htmlFor="t_o" className="font-source text-slate-700">
-                            Outdoor temperature (t<sub>o</sub>) [°C]
-                        </FieldLabel>
-                        <Input id='t_o' name="t_o" type="number" value={t_o} onChange={handleChange} className=" bg-slate-50" />
-                    </Field>
-                    <Field>
-                        <FieldLabel htmlFor="K" className="font-source text-slate-700">
-                            Effectiveness coefficient (K)
-                        </FieldLabel>
-                        <Input id='K' name="K" type="number" value={K} onChange={handleChange} className=" bg-slate-50" />
-                    </Field>
-                </FieldGroup>
+                    <div className="flex justify-end">
+                        <Button
+                            onClick={handleCalculate}
+                            disabled={loading}
+                            className="bg-[#1A73E8] hover:bg-[#1557B0] text-white px-8 py-6 rounded-xl font-semibold text-lg"
+                        >
+                            {loading ? 'Calculating...' : 'Calculate Flows'}
+                        </Button>
+                    </div>
 
-                <Button
-                    variant={"destructive"}
-                    className="mt-5 w-30 border-slate-300"
-                    onClick={handleCalculate}
-                    disabled={loading}
-                >
-                    {loading ? 'Calculating...' : 'Calculate'}
-                </Button>
-            </div>
-            {result && (
-                <Card className="mt-5 bg-blue-50 border-blue-200">
-                    <CardContent className="">
-                        <h3 className="text-lg font-semibold text-slate-800 mb-4">Results</h3>
-                        <div className="space-y-3">
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div>
-                                    <p className="text-sm text-slate-600">Thermal Flow (Q<sub>t</sub>)</p>
-                                    <p className="text-2xl font-bold text-slate-900">{result.Qt} m³/min</p>
+                    {/* Live Formula Preview */}
+                    <div className="bg-[#0f1623] border border-white/5 rounded-2xl p-6 relative">
+                        <div className="flex justify-between items-center mb-8">
+                            <h3 className="text-[#1A73E8] text-xs font-bold uppercase tracking-wider">
+                                LIVE FORMULA PREVIEW
+                            </h3>
+                            <ArrowLeft className="text-white/20 h-5 w-5" />
+                        </div>
+
+                        <div className="text-white text-2xl flex justify-center py-8 mb-8">
+                            <BlockMath
+                                math={`
+                                    \\begin{align*}
+                                    Q_t &= 7.0 \\times A \\times \\sqrt{h \\times (t_i - t_o)} \\\\
+                                    Q_w &= \\frac{K \\times A_{smaller} \\times V}{60} \\\\
+                                    Q_{combined} &= \\sqrt{Q_w^2 + Q_t^2}
+                                    \\end{align*}
+                                `}
+                            />
+                        </div>
+
+                        <div className="bg-[#131B2C] rounded-xl p-4 font-mono text-sm space-y-3">
+                            <div className="flex items-start gap-4 mx-4 my-2">
+                                <span className="text-gray-500 uppercase tracking-wider text-xs mt-1 w-24">STEP</span>
+                                <div className="space-y-1">
+                                    <span className="text-[#1A73E8] break-all block">
+                                        {result
+                                            ? `Qt = 7.0 × ${A_inlet} × √(${h} × (${t_i} - ${t_o}))`
+                                            : "Qt = 7.0 × A × √(h × (ti - to))"
+                                        }
+                                    </span>
+                                    <span className="text-[#1A73E8] break-all block">
+                                        {result
+                                            ? `Qw = (${K} × ${A_smaller} × ${V}) / 60`
+                                            : "Qw = (K × As × V) / 60"
+                                        }
+                                    </span>
                                 </div>
+                            </div>
+                            <div className="flex items-center gap-4 mx-4 my-2">
+                                <span className="text-gray-500 uppercase tracking-wider text-xs w-24">IMPLEMENTATION:</span>
+                                <span className="text-green-400 font-bold">
+                                    {result ? `Qt: ${result.Qt.toFixed(1)}, Qw: ${result.Qw.toFixed(1)}` : "Wait for calc..."}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Column - Results */}
+                <div className="lg:col-span-4 space-y-6">
+                    <ResultCard
+                        label="Combined Flow (Q)"
+                        value={result ? result.Q_combined.toFixed(2) : "---"}
+                        unit="m³/min"
+                    />
+
+                    {result && (
+                        <div className="bg-[#131B2C] border border-white/10 rounded-2xl p-6 space-y-4">
+                            <h4 className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Components</h4>
+                            <div className="space-y-4">
                                 <div>
-                                    <p className="text-sm text-slate-600">Wind Flow (Q<sub>w</sub>)</p>
-                                    <p className="text-2xl font-bold text-slate-900">{result.Qw} m³/min</p>
+                                    <p className="text-gray-500 text-xs">Thermal Flow</p>
+                                    <p className="text-xl font-bold text-white">{result.Qt.toFixed(2)} <span className="text-sm font-normal text-gray-600">m³/min</span></p>
                                 </div>
+                                <div className="w-full h-px bg-white/5"></div>
                                 <div>
-                                    <p className="text-sm text-slate-600">Combined Flow (Q)</p>
-                                    <p className="text-2xl font-bold text-slate-900">{result.Q_combined} m³/min</p>
+                                    <p className="text-gray-500 text-xs">Wind Flow</p>
+                                    <p className="text-xl font-bold text-white">{result.Qw.toFixed(2)} <span className="text-sm font-normal text-gray-600">m³/min</span></p>
                                 </div>
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
-            )}
+                    )}
 
-            <div className="mt-5 overflow-x-auto">
-                <h4 className="text-center text-blue-600 font-semibold mb-3">
-                    Live Formula Preview – See the math with your numbers
-                </h4>
-                <BlockMath
-                    math={`
-\\begin{align*}
-Q_t &= 7.0 \\times A \\times \\sqrt{h \\times (t_i - t_o)} \\quad [m^3/min] \\\\[10pt]
-Q_t &= 7.0 \\times ${A_inlet} \\times \\sqrt{${h} \\times (${t_i} - ${t_o})} \\\\[10pt]
-Q_t &= \\textbf{${result ? result.Qt.toFixed(2) : '---'}} \\text{ m³/min} \\\\[15pt]
-Q_w &= \\frac{K \\times A_{smaller} \\times V}{60} \\quad [m^3/min] \\\\[10pt]
-Q_w &= \\frac{${K} \\times ${A_smaller} \\times ${V}}{60} \\\\[10pt]
-Q_w &= \\textbf{${result ? result.Qw.toFixed(2) : '---'}} \\text{ m³/min} \\\\[15pt]
-Q_{combined} &= \\sqrt{Q_w^2 + Q_t^2} \\\\[10pt]
-Q_{combined} &= \\textbf{${result ? result.Q_combined.toFixed(2) : '---'}} \\text{ m³/min}
-\\end{align*}
-`}
-                />
-                <p className="text-center text-sm text-slate-500 mt-2">
-                    Equations update live as you change any input
-                </p>
+
+                </div>
             </div>
-
-
-        </>
-    )
+        </div>
+    );
 }

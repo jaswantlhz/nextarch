@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 /python_backend/__pycache__
+/python_backend/venv
 /.pnp
 .pnp.*
 .yarn/*
