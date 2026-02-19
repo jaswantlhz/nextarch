@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import {GoogleAnalytics} from "@next/third-parties/google"
+import { GoogleAnalytics } from "@next/third-parties/google"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,14 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-      {children}
-      <Analytics />
-      <SpeedInsights />
-      </body>
-      <GoogleAnalytics gaId="G-VQM3YWZS0D" />
-    </html>
+    <>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          {children}
+          <Analytics />
+          <SpeedInsights />
+        </body>
+        <GoogleAnalytics gaId="G-VQM3YWZS0D" />
+      </html>
+    </>
   );
 }

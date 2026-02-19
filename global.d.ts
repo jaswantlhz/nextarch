@@ -11,7 +11,7 @@ declare module "react-katex" {
     renderError?: (error: Error) => React.ReactNode
   }
 
-  export interface BlockMathProps extends InlineMathProps {}
+  export type BlockMathProps = InlineMathProps
 
   export const InlineMath: React.FC<InlineMathProps>
   export const BlockMath: React.FC<BlockMathProps>
