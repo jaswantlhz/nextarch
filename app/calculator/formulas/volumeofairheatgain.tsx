@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { MetricCard, ResultCard } from "../dashboard-components";
 import { Button } from "@/components/ui/button";
-import { FileText, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import "katex/dist/katex.min.css";
 import { BlockMath } from "react-katex";
+import { useTheme } from "../theme-context";
 
 interface ResultData {
     Qs: number;
@@ -16,6 +17,8 @@ interface ResultData {
 }
 
 export default function Volumeofairheatgain() {
+    const { theme } = useTheme();
+    const isDark = theme === "dark";
     const [values, setvalues] = useState({
         ks: 0,
         h: 0,
@@ -71,8 +74,8 @@ export default function Volumeofairheatgain() {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Volume of Air (Heat Gain)</h1>
-                    <p className="text-gray-400 max-w-2xl">
+                    <h1 className="text-3xl font-bold mb-2" style={{ color: isDark ? "#ffffff" : "#1e293b" }}>Volume of Air (Heat Gain)</h1>
+                    <p className="max-w-2xl" style={{ color: isDark ? "#9ca3af" : "#64748b" }}>
                         Calculates sensible and latent air volumes based on heat gain and humidity differences.
                     </p>
                 </div>
@@ -139,15 +142,21 @@ export default function Volumeofairheatgain() {
                     </div>
 
                     {/* Live Formula Preview */}
-                    <div className="bg-[#0f1623] border border-white/5 rounded-2xl p-6 relative">
+                    <div
+                        className="rounded-2xl p-6 relative"
+                        style={{
+                            background: isDark ? "#0f1623" : "#f8fafc",
+                            border: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid #e2e8f0",
+                        }}
+                    >
                         <div className="flex justify-between items-center mb-8">
                             <h3 className="text-[#1A73E8] text-xs font-bold uppercase tracking-wider">
                                 LIVE FORMULA PREVIEW
                             </h3>
-                            <ArrowLeft className="text-white/20 h-5 w-5" />
+                            <ArrowLeft className="h-5 w-5" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "#cbd5e1" }} />
                         </div>
 
-                        <div className="text-white text-2xl flex justify-center py-8 mb-8">
+                        <div className="text-2xl flex justify-center py-8 mb-8" style={{ color: isDark ? "#ffffff" : "#1e293b" }}>
                             <BlockMath
                                 math={`
                                     \\begin{align*}
@@ -159,9 +168,15 @@ export default function Volumeofairheatgain() {
                             />
                         </div>
 
-                        <div className="bg-[#131B2C] rounded-xl p-4 font-mono text-sm space-y-3">
+                        <div
+                            className="rounded-xl p-4 font-mono text-sm space-y-3"
+                            style={{
+                                background: isDark ? "#131B2C" : "#f1f5f9",
+                                border: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid #e2e8f0",
+                            }}
+                        >
                             <div className="flex items-start gap-4 mx-4 my-2">
-                                <span className="text-gray-500 uppercase tracking-wider text-xs mt-1 w-24">STEP</span>
+                                <span className="uppercase tracking-wider text-xs mt-1 w-24" style={{ color: isDark ? "#6b7280" : "#94a3b8" }}>STEP</span>
                                 <div className="space-y-1">
                                     <span className="text-[#1A73E8] break-all block">
                                         {result
@@ -178,7 +193,7 @@ export default function Volumeofairheatgain() {
                                 </div>
                             </div>
                             <div className="flex items-center gap-4 mx-4 my-2">
-                                <span className="text-gray-500 uppercase tracking-wider text-xs w-24">IMPLEMENTATION:</span>
+                                <span className="uppercase tracking-wider text-xs w-24" style={{ color: isDark ? "#6b7280" : "#94a3b8" }}>IMPLEMENTATION:</span>
                                 <span className="text-green-400 font-bold">
                                     {result ? `Qs: ${result.Qs.toFixed(1)}, Ql: ${result.Q_humidity.toFixed(1)}` : "Wait for calc..."}
                                 </span>
@@ -197,22 +212,28 @@ export default function Volumeofairheatgain() {
 
                     {/* Breakdown Results */}
                     {result && (
-                        <div className="bg-[#131B2C] border border-white/10 rounded-2xl p-6 space-y-4">
-                            <h4 className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Detailed Breakdown</h4>
+                        <div
+                            className="rounded-2xl p-6 space-y-4"
+                            style={{
+                                background: isDark ? "#131B2C" : "#ffffff",
+                                border: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid #e2e8f0",
+                            }}
+                        >
+                            <h4 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: isDark ? "#9ca3af" : "#64748b" }}>Detailed Breakdown</h4>
                             <div className="space-y-4">
                                 <div>
-                                    <p className="text-gray-500 text-xs">Sensible Air Volume (Qs)</p>
-                                    <p className="text-xl font-bold text-white">{result.Qs.toFixed(1)} <span className="text-sm font-normal text-gray-600">m³/h</span></p>
+                                    <p className="text-xs" style={{ color: isDark ? "#6b7280" : "#94a3b8" }}>Sensible Air Volume (Qs)</p>
+                                    <p className="text-xl font-bold" style={{ color: isDark ? "#ffffff" : "#1e293b" }}>{result.Qs.toFixed(1)} <span className="text-sm font-normal" style={{ color: isDark ? "#4b5563" : "#94a3b8" }}>m³/h</span></p>
                                 </div>
-                                <div className="w-full h-px bg-white/5"></div>
+                                <div className="w-full h-px" style={{ background: isDark ? "rgba(255,255,255,0.05)" : "#e2e8f0" }}></div>
                                 <div>
-                                    <p className="text-gray-500 text-xs">Latent (Vapor Method)</p>
-                                    <p className="text-xl font-bold text-white">{result.Ql_vapor.toFixed(1)} <span className="text-sm font-normal text-gray-600">m³/h</span></p>
+                                    <p className="text-xs" style={{ color: isDark ? "#6b7280" : "#94a3b8" }}>Latent (Vapor Method)</p>
+                                    <p className="text-xl font-bold" style={{ color: isDark ? "#ffffff" : "#1e293b" }}>{result.Ql_vapor.toFixed(1)} <span className="text-sm font-normal" style={{ color: isDark ? "#4b5563" : "#94a3b8" }}>m³/h</span></p>
                                 </div>
-                                <div className="w-full h-px bg-white/5"></div>
+                                <div className="w-full h-px" style={{ background: isDark ? "rgba(255,255,255,0.05)" : "#e2e8f0" }}></div>
                                 <div>
-                                    <p className="text-gray-500 text-xs">Latent (Humidity Method)</p>
-                                    <p className="text-xl font-bold text-white">{result.Q_humidity.toFixed(1)} <span className="text-sm font-normal text-gray-600">m³/h</span></p>
+                                    <p className="text-xs" style={{ color: isDark ? "#6b7280" : "#94a3b8" }}>Latent (Humidity Method)</p>
+                                    <p className="text-xl font-bold" style={{ color: isDark ? "#ffffff" : "#1e293b" }}>{result.Q_humidity.toFixed(1)} <span className="text-sm font-normal" style={{ color: isDark ? "#4b5563" : "#94a3b8" }}>m³/h</span></p>
                                 </div>
                             </div>
                         </div>
