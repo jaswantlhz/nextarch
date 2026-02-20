@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { MetricCard, ResultCard, FormulaPreview, SchematicPreview } from "./dashboard-components";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
+import { useTheme } from "./theme-context";
 
 interface ResultData {
     Q: number;
@@ -13,6 +14,8 @@ interface ResultData {
 }
 
 export default function WindowOpeningDashboard() {
+    const { theme } = useTheme();
+    const isDark = theme === "dark";
     const [values, setValues] = useState({
         V_room: 120, // Default matching design
         n_ach: 6,    // Default matching design
@@ -92,21 +95,29 @@ export default function WindowOpeningDashboard() {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Optimised Window Opening</h1>
-                    <p className="text-gray-400 max-w-2xl">
+                    <h1 className="text-3xl font-bold mb-2" style={{ color: isDark ? "#ffffff" : "#1e293b" }}>Optimised Window Opening</h1>
+                    <p className="max-w-2xl" style={{ color: isDark ? "#9ca3af" : "#64748b" }}>
                         Determine required effective area based on room geometry and airflow requirements.
                     </p>
                 </div>
-                <div className="bg-[#131B2C] p-1 rounded-lg border border-white/5 flex">
+                <div
+                    className="p-1 rounded-lg flex"
+                    style={{
+                        background: isDark ? "#131B2C" : "#f1f5f9",
+                        border: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid #e2e8f0",
+                    }}
+                >
                     <button
                         onClick={() => setIsMetric(true)}
-                        className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${isMetric ? 'bg-[#1A73E8] text-white' : 'text-gray-400 hover:text-white'}`}
+                        className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${isMetric ? 'bg-[#1A73E8] text-white' : ''}`}
+                        style={!isMetric ? { color: isDark ? "#9ca3af" : "#64748b" } : {}}
                     >
                         Metric
                     </button>
                     <button
                         onClick={() => setIsMetric(false)}
-                        className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${!isMetric ? 'bg-[#1A73E8] text-white' : 'text-gray-400 hover:text-white'}`}
+                        className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${!isMetric ? 'bg-[#1A73E8] text-white' : ''}`}
+                        style={isMetric ? { color: isDark ? "#9ca3af" : "#64748b" } : {}}
                     >
                         Imperial
                     </button>
