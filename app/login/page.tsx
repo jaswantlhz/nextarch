@@ -14,18 +14,7 @@ export default function LoginPage() {
       <div className="login-grid" />
 
       {/* Corner decoratives */}
-      <div className="login-corner-tl">
-        <span className="login-coord">LAT: 40.7128 N</span>
-        <span className="login-coord">LNG: 74.0060 W</span>
-      </div>
-      <div className="login-corner-tr">
-        <span className="login-coord-right">SYS: ONLINE</span>
-        <span className="login-coord-right">VER: 4.0.0.128</span>
-      </div>
-      <div className="login-corner-bl">
-        <span className="login-coord">X: 1042.029 // Y: 9283.111</span>
-      </div>
-
+      
       {/* Theme toggle button — top right, below corner text */}
       <button
         className="login-theme-toggle"
@@ -56,40 +45,7 @@ export default function LoginPage() {
       </button>
 
       {/* Watermark */}
-      <div className="login-watermark">PRECISION</div>
 
-      {/* Decorative SVG icons on left and right */}
-      <div className="login-deco-left">
-        <svg width="60" height="80" viewBox="0 0 60 80" fill="none">
-          <line x1="30" y1="0" x2="0" y2="80" stroke="#3b82f6" strokeWidth="2" />
-          <line x1="30" y1="0" x2="60" y2="80" stroke="#3b82f6" strokeWidth="2" />
-          <circle cx="30" cy="0" r="4" fill="#3b82f6" />
-        </svg>
-      </div>
-      <div className="login-deco-left-grid">
-        <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-          {[0, 20, 40, 60].map(x => (
-            <line key={`v${x}`} x1={x} y1="0" x2={x} y2="60" stroke="#3b82f6" strokeWidth="1" opacity="0.6" />
-          ))}
-          {[0, 20, 40, 60].map(y => (
-            <line key={`h${y}`} x1="0" y1={y} x2="60" y2={y} stroke="#3b82f6" strokeWidth="1" opacity="0.6" />
-          ))}
-        </svg>
-      </div>
-      <div className="login-deco-right">
-        <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
-          <rect x="0" y="35" width="50" height="15" stroke="#6366f1" strokeWidth="1.5" fill="none" />
-          <line x1="0" y1="35" x2="15" y2="0" stroke="#6366f1" strokeWidth="1.5" />
-        </svg>
-      </div>
-      <div className="login-deco-ruler">
-        <svg width="120" height="50" viewBox="0 0 120 50" fill="none">
-          <rect x="0" y="10" width="120" height="30" rx="3" stroke="#6366f1" strokeWidth="1.5" fill="none" />
-          {[0, 15, 30, 45, 60, 75, 90, 105, 120].map((x, i) => (
-            <line key={i} x1={x} y1="10" x2={x} y2={i % 2 === 0 ? "25" : "20"} stroke="#6366f1" strokeWidth="1" />
-          ))}
-        </svg>
-      </div>
 
       {/* Main centered content */}
       <div className="login-center">
@@ -99,9 +55,9 @@ export default function LoginPage() {
           <div className="login-logo-icon">
             <PieChart size={30} color="#3b82f6" strokeWidth={1.75} />
           </div>
-          <span className="login-logo-title">NextArch Precision</span>
+          <span className="login-logo-title">NextArch</span>
         </div>
-        <div className="login-subtitle">PRECISION WORKSPACE // V 4.0</div>
+        
 
         {/* Card */}
         <div className="login-card">
@@ -195,17 +151,7 @@ export default function LoginPage() {
         </div>
 
         {/* Footer */}
-        <div className="login-footer">
-          <span className="login-footer-dot" />
-          SECURE ARCHITECTURAL NODE #291
-        </div>
-        <div className="login-footer-links">
-          <a href="#" className="login-footer-link">TERMS_OF_USE</a>
-          <span className="login-footer-sep">//</span>
-          <a href="#" className="login-footer-link">DATA_ENCRYPTION</a>
-          <span className="login-footer-sep">//</span>
-          <a href="#" className="login-footer-link">SUPPORT_COMMS</a>
-        </div>
+        
       </div>
 
       <style>{`
@@ -318,24 +264,6 @@ export default function LoginPage() {
           z-index: 0;
           user-select: none;
           transition: color 0.3s;
-        }
-
-        /* Decorative elements */
-        .login-deco-left {
-          position: fixed; top: 45px; left: 44px;
-          z-index: 1; opacity: 0.4;
-        }
-        .login-deco-left-grid {
-          position: fixed; bottom: 160px; left: 220px;
-          z-index: 1; opacity: 0.25;
-        }
-        .login-deco-right {
-          position: fixed; top: 160px; right: 220px;
-          z-index: 1; opacity: 0.35;
-        }
-        .login-deco-ruler {
-          position: fixed; bottom: 60px; right: 80px;
-          z-index: 1; opacity: 0.3;
         }
 
         /* Center layout */
