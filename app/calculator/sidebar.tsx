@@ -16,7 +16,7 @@ import { useTheme } from "./theme-context";
 
 const sidebarItems = [
     { icon: Wind, label: "Volume of Air (Heat Gain)", mode: "volume-heat-gain" },
-    { icon: LayoutGrid, label: "Window Calculations", mode: "window-calculations" },
+    { icon: LayoutGrid, label: "Window Calculations", mode: "window-opening" },
     { icon: Activity, label: "Volume of Air (Qw + Qt Forces)", mode: "volume-forces" },
     { icon: TableProperties, label: "Q from ACH", mode: "q-from-ach" },
     { icon: Volume2, label: "By Element", mode: "by-element" },
@@ -25,7 +25,7 @@ const sidebarItems = [
 
 export function Sidebar() {
     const searchParams = useSearchParams();
-    const currentMode = searchParams.get("mode") || "window-calculations";
+    const currentMode = searchParams.get("mode") || "window-opening";
     const { theme } = useTheme();
     const isDark = theme === "dark";
 
