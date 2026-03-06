@@ -14,7 +14,7 @@ export default function LoginPage() {
       <div className="login-grid" />
 
       {/* Corner decoratives */}
-      
+
       {/* Theme toggle button — top right, below corner text */}
       <button
         className="login-theme-toggle"
@@ -57,7 +57,7 @@ export default function LoginPage() {
           </div>
           <span className="login-logo-title">NextArch</span>
         </div>
-        
+
 
         {/* Card */}
         <div className="login-card">
@@ -151,7 +151,7 @@ export default function LoginPage() {
         </div>
 
         {/* Footer */}
-        
+
       </div>
 
       <style>{`

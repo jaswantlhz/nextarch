@@ -36,7 +36,7 @@ export default function SolarHeatGain() {
     const handleCalculate = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.API_URL}/api/solar-heat-gain`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/solar-heat-gain`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ area, SHGC: shgc, projection_factor, solar_irradiation }),

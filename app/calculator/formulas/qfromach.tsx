@@ -36,7 +36,7 @@ export default function Qfromach() {
     const handleCalculate = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.API_URL}/api/q-from-ach`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/q-from-ach`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ ACH, V, rho, Cp, delta_T }),

@@ -93,7 +93,7 @@ export default function Voaqwqtforce() {
     const handleCalculate = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.API_URL}/api/volume-air-forces`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/volume-air-forces`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ A_inlet, h, t_i, t_o, A_smaller, V, K }),
