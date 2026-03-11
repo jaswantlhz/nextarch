@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { MetricCard, ResultCard } from "../dashboard-components";
 import { Button } from "@/components/ui/button";
-import { Upload, Wind, Info, ArrowLeft } from "lucide-react";
+import { Upload, Wind, Info } from "lucide-react";
 import "katex/dist/katex.min.css";
 import { BlockMath } from "react-katex";
 import { Label } from "@/components/ui/label";
@@ -244,37 +244,17 @@ export default function Voaqwqtforce() {
 
                     {/* Live Formula Preview */}
                     <div className="rounded-2xl p-6 relative" style={{ background: previewBg, border: previewBorder }}>
-                        <div className="flex justify-between items-center mb-8">
+                        <div className="flex items-center mb-8">
                             <h3 className="text-[#1A73E8] text-xs font-bold uppercase tracking-wider">LIVE FORMULA PREVIEW</h3>
-                            <ArrowLeft className="h-5 w-5" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "#cbd5e1" }} />
                         </div>
-                        <div className="text-2xl flex justify-center py-8 mb-8" style={{ color: titleColor }}>
+                        <div className="flex justify-center py-8 mb-8" style={{ color: titleColor, fontSize: '1.5rem' }}>
                             <BlockMath
                                 math={`\\begin{align*}
-                                    Q_t &= 7.0 \\times A \\times \\sqrt{h \\times (t_i - t_o)} \\\\
-                                    Q_w &= \\frac{K \\times A_{smaller} \\times V}{60} \\\\
+                                    Q_t &= 7.0 \\times ${A_inlet || 'A'} \\times \\sqrt{${h || 'h'} \\times (${t_i || 't_i'} - ${t_o || 't_o'})} \\\\
+                                    Q_w &= \\frac{${K || 'K'} \\times ${A_smaller || 'A_{smaller}'} \\times ${V || 'V'}}{60} \\\\
                                     Q_{combined} &= \\sqrt{Q_w^2 + Q_t^2}
                                 \\end{align*}`}
                             />
-                        </div>
-                        <div className="rounded-xl p-4 font-mono text-sm space-y-3" style={{ background: stepBg, border: stepBorder }}>
-                            <div className="flex items-start gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs mt-1 w-24" style={{ color: labelColor }}>STEP</span>
-                                <div className="space-y-1">
-                                    <span className="text-[#1A73E8] break-all block">
-                                        {result ? `Qt = 7.0 × ${A_inlet} × √(${h} × (${t_i} - ${t_o}))` : "Qt = 7.0 × A × √(h × (ti - to))"}
-                                    </span>
-                                    <span className="text-[#1A73E8] break-all block">
-                                        {result ? `Qw = (${K} × ${A_smaller} × ${V}) / 60` : "Qw = (K × As × V) / 60"}
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs w-24" style={{ color: labelColor }}>IMPLEMENTATION:</span>
-                                <span className="text-green-400 font-bold">
-                                    {result ? `Qt: ${result.Qt.toFixed(1)}, Qw: ${result.Qw.toFixed(1)}` : "Wait for calc..."}
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </div>

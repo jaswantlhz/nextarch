@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { MetricCard, ResultCard } from "../dashboard-components";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import "katex/dist/katex.min.css";
 import { BlockMath } from "react-katex";
 import { useTheme } from "../theme-context";
@@ -149,55 +148,22 @@ export default function Volumeofairheatgain() {
                             border: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid #e2e8f0",
                         }}
                     >
-                        <div className="flex justify-between items-center mb-8">
+                        <div className="flex items-center mb-8">
                             <h3 className="text-[#1A73E8] text-xs font-bold uppercase tracking-wider">
                                 LIVE FORMULA PREVIEW
                             </h3>
-                            <ArrowLeft className="h-5 w-5" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "#cbd5e1" }} />
                         </div>
 
-                        <div className="text-2xl flex justify-center py-8 mb-8" style={{ color: isDark ? "#ffffff" : "#1e293b" }}>
+                        <div className="flex justify-center py-8 mb-8" style={{ color: isDark ? "#ffffff" : "#1e293b", fontSize: '1.5rem' }}>
                             <BlockMath
                                 math={`
                                     \\begin{align*}
-                                    Q_s &= \\frac{2.9768 \\times K_s}{t} \\\\
-                                    Q_l &= \\frac{K_l}{814 \\times (w_o - w_i)} \\\\
+                                    Q_s &= \\frac{2.9768 \\times ${ks || 'K_s'}}{${t || 't'}} \\\\
+                                    Q_l &= \\frac{${kl || 'K_l'}}{814 \\times (${wo || 'w_o'} - ${wi || 'w_i'})} \\\\
                                     Q_t &\\approx \\max(Q_{t\\text{ vapor}}, Q_{t\\text{ humidity}})
                                     \\end{align*}
                                 `}
                             />
-                        </div>
-
-                        <div
-                            className="rounded-xl p-4 font-mono text-sm space-y-3"
-                            style={{
-                                background: isDark ? "#131B2C" : "#f1f5f9",
-                                border: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid #e2e8f0",
-                            }}
-                        >
-                            <div className="flex items-start gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs mt-1 w-24" style={{ color: isDark ? "#6b7280" : "#94a3b8" }}>STEP</span>
-                                <div className="space-y-1">
-                                    <span className="text-[#1A73E8] break-all block">
-                                        {result
-                                            ? `Qs = (2.977 × ${ks}) / ${t}`
-                                            : "Qs = (2.977 × Ks) / t"
-                                        }
-                                    </span>
-                                    <span className="text-[#1A73E8] break-all block">
-                                        {result
-                                            ? `Ql = ${kl} / (814 × (${wo} - ${wi}))`
-                                            : "Ql = Kl / (814 × (wo - wi))"
-                                        }
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs w-24" style={{ color: isDark ? "#6b7280" : "#94a3b8" }}>IMPLEMENTATION:</span>
-                                <span className="text-green-400 font-bold">
-                                    {result ? `Qs: ${result.Qs.toFixed(1)}, Ql: ${result.Q_humidity.toFixed(1)}` : "Wait for calc..."}
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </div>

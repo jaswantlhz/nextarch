@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { MetricCard, ResultCard } from "../dashboard-components";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Layers, ArrowRight, ArrowLeft } from "lucide-react";
+import { Plus, Trash2, Layers, ArrowRight } from "lucide-react";
 import "katex/dist/katex.min.css";
 import { BlockMath } from "react-katex";
 import { Input } from "@/components/ui/input";
@@ -186,29 +186,11 @@ export default function Byelement() {
 
                     {/* Live Formula Preview */}
                     <div className="rounded-2xl p-6 relative" style={{ background: previewBg, border: previewBorder }}>
-                        <div className="flex justify-between items-center mb-8">
+                        <div className="flex items-center mb-8">
                             <h3 className="text-[#1A73E8] text-xs font-bold uppercase tracking-wider">LIVE FORMULA PREVIEW</h3>
-                            <ArrowLeft className="h-5 w-5" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "#cbd5e1" }} />
                         </div>
-                        <div className="text-2xl flex justify-center py-8 mb-8" style={{ color: titleColor }}>
-                            <BlockMath math={`Q_{total} = (\\sum (U_i \\times A_i)) \\times \\Delta T`} />
-                        </div>
-                        <div className="rounded-xl p-4 font-mono text-sm space-y-3" style={{ background: stepBg, border: stepBorder }}>
-                            <div className="flex items-start gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs mt-1 w-24" style={{ color: labelColor }}>STEP</span>
-                                <span className="text-[#1A73E8] break-all">
-                                    {result
-                                        ? `Q = (${elements.map(e => (e.U * e.A).toFixed(1)).join(' + ')}) × ${deltaT}`
-                                        : "Q = (Σ U × A) × ΔT"
-                                    }
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs w-24" style={{ color: labelColor }}>IMPLEMENTATION:</span>
-                                <span className="text-green-400 font-bold">
-                                    {result ? result.Q_total.toFixed(3) : "Wait for calc..."}
-                                </span>
-                            </div>
+                        <div className="flex justify-center py-8 mb-8" style={{ color: titleColor, fontSize: '1.5rem' }}>
+                            <BlockMath math={`Q_{total} = \\left(${elements.map(e => `(${e.U || 'U_i'} \\times ${e.A || 'A_i'})`).join(' + ')}\\right) \\times ${deltaT || '\\Delta T'}`} />
                         </div>
                     </div>
                 </div>

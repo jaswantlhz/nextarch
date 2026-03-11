@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { MetricCard, ResultCard } from "../dashboard-components";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import "katex/dist/katex.min.css";
 import { BlockMath } from "react-katex";
 import { Label } from "@/components/ui/label";
@@ -160,46 +159,15 @@ export default function Windowcalculations() {
 
                     {/* Live Formula Preview */}
                     <div className="rounded-2xl p-6 relative" style={{ background: previewBg, border: previewBorder }}>
-                        <div className="flex justify-between items-center mb-8">
+                        <div className="flex items-center mb-8">
                             <h3 className="text-[#1A73E8] text-xs font-bold uppercase tracking-wider">LIVE FORMULA PREVIEW</h3>
-                            <ArrowLeft className="h-5 w-5" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "#cbd5e1" }} />
                         </div>
-                        <div className="text-2xl flex justify-center py-8 mb-8" style={{ color: titleColor }}>
+                        <div className="flex justify-center py-8 mb-8" style={{ color: titleColor, fontSize: '1.5rem' }}>
                             {equalOpenings ? (
-                                <BlockMath math={`\\begin{align*} Q &= V_{room} \\times n_{ach} \\\\[6pt] A &= \\frac{Q}{K \\times V} \\quad \\text{(equal openings)} \\end{align*}`} />
+                                <BlockMath math={`\\begin{align*} Q &= ${V_room || 'V_{room}'} \\times ${n_ach || 'n_{ach}'} \\\\[6pt] A &= \\frac{Q}{${K || 'K'} \\times ${V || 'V'}} \\quad \\text{(equal openings)} \\end{align*}`} />
                             ) : (
-                                <BlockMath math={`\\begin{align*} \\frac{1}{A_{eff}} &= \\frac{1}{A_i} + \\frac{1}{A_o} \\\\[6pt] A_i &= \\text{Inlet}, \\quad A_o = \\text{Outlet} \\end{align*}`} />
+                                <BlockMath math={`\\begin{align*} \\frac{1}{${A_effective || 'A_{eff}'}} &= \\frac{1}{A_i} + \\frac{1}{A_o} \\\\[6pt] A_i &= \\text{Inlet}, \\quad A_o = \\text{Outlet} \\end{align*}`} />
                             )}
-                        </div>
-                        <div className="rounded-xl p-4 font-mono text-sm space-y-3" style={{ background: stepBg, border: stepBorder }}>
-                            <div className="flex items-start gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs mt-1 w-24" style={{ color: labelColor }}>STEP</span>
-                                <div className="space-y-1">
-                                    <span className="text-[#1A73E8] break-all block">
-                                        {equalOpenings
-                                            ? `Q = ${V_room} × ${n_ach} = ${calculatedQ.toFixed(2)} m³/h`
-                                            : `1/A_eff = 1/Ai + 1/Ao  (A_eff = ${A_effective})`
-                                        }
-                                    </span>
-                                    <span className="text-[#1A73E8] break-all block">
-                                        {equalOpenings
-                                            ? `A = ${calculatedQ.toFixed(2)} / (${K} × ${V})`
-                                            : `Solving for ${calcInlet ? 'Inlet' : 'Outlet'}`
-                                        }
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs w-24" style={{ color: labelColor }}>IMPLEMENTATION:</span>
-                                <span className="text-green-400 font-bold">
-                                    {result
-                                        ? equalOpenings
-                                            ? `A = ${result.A?.toFixed(3) ?? '---'} m²`
-                                            : `Ai = ${result.Ai.toFixed(3)} m²,  Ao = ${result.Ao.toFixed(3)} m²`
-                                        : 'Wait for calc...'
-                                    }
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MetricCard, ResultCard, FormulaPreview, SchematicPreview } from "./dashboard-components";
+import { MetricCard, ResultCard, FormulaPreview } from "./dashboard-components";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
 import { useTheme } from "./theme-context";
@@ -178,22 +178,6 @@ export default function WindowOpeningDashboard() {
                         value={result?.A?.toFixed(3) || "0.000"}
                         unit="m²"
                     />
-
-                    <div className="h-[400px]">
-                        <SchematicPreview
-                            area={result?.A ?? 0}
-                            V_room={values.V_room}
-                            n_ach={values.n_ach}
-                            v_wind={values.v_wind}
-                            K={values.K}
-                            isMetric={isMetric}
-                        />
-                    </div>
-
-                    <Button className="w-full bg-[#131B2C] hover:bg-[#1A73E8] text-white border border-white/10 h-14 text-lg font-medium rounded-xl transition-all group">
-                        <FileText className="mr-2 h-5 w-5 text-gray-400 group-hover:text-white" />
-                        Generate Technical Report
-                    </Button>
                 </div>
             </div>
         </div>

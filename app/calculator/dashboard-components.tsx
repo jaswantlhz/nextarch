@@ -134,13 +134,8 @@ export function FormulaPreview({
                 borderLeft: "4px solid #1A73E8",
             }}
         >
-            <div className="flex justify-between items-center mb-8">
+            <div className="flex items-center mb-8">
                 <span className="text-xs font-bold text-[#1A73E8] uppercase tracking-wider">Live Formula Preview</span>
-                <span style={{ color: isDark ? "rgba(255,255,255,0.2)" : "#cbd5e1" }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M19 12H5" /><path d="M14 18l-6-6 6-6" />
-                    </svg>
-                </span>
             </div>
 
             <div className="flex justify-center items-center py-8">
@@ -151,163 +146,22 @@ export function FormulaPreview({
                     A<sub className="text-lg not-italic opacity-70">eff</sub> = <span className="mx-2" />
                     <div className="inline-block text-center align-middle">
                         <div
-                            className="pb-1 mb-1 px-4"
+                            className="pb-1 mb-1 px-4 whitespace-nowrap"
                             style={{
                                 borderBottom: isDark ? "1px solid #4b5563" : "1px solid #94a3b8",
                                 color: isDark ? "#e5e7eb" : "#1e293b",
                             }}
                         >
-                            V × n
+                            {V} × {n}
                         </div>
-                        <div style={{ color: isDark ? "#e5e7eb" : "#1e293b" }}>3600 × v × K</div>
+                        <div className="whitespace-nowrap" style={{ color: isDark ? "#e5e7eb" : "#1e293b" }}>
+                            3600 × {v_wind} × {K}
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div
-                className="rounded-xl p-4 mt-8 font-mono text-sm flex flex-col gap-2 relative overflow-hidden shadow-inner"
-                style={{
-                    background: isDark ? "#131B2C" : "#f1f5f9",
-                    border: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid #e2e8f0",
-                }}
-            >
-                <div className="flex items-center gap-4 text-blue-400">
-                    <span
-                        className="opacity-50 min-w-[100px] text-xs uppercase tracking-wider"
-                        style={{ color: isDark ? "#6b7280" : "#94a3b8" }}
-                    >
-                        Step
-                    </span>
-                    <span>
-                        A = <span className="text-[#1A73E8]">({V} × {n})</span> / <span className="text-[#1A73E8]">(3600 × {v_wind} × {K})</span>
-                    </span>
-                </div>
-                <div className="flex items-center gap-4 text-green-400">
-                    <span
-                        className="opacity-50 min-w-[100px] text-xs uppercase tracking-wider"
-                        style={{ color: isDark ? "#6b7280" : "#94a3b8" }}
-                    >
-                        Implementation:
-                    </span>
-                    <span className="font-bold">{result}</span>
-                </div>
-            </div>
         </div>
     );
 }
 
-interface SchematicPreviewProps {
-    area?: number;
-    V_room?: number;
-    n_ach?: number;
-    v_wind?: number;
-    K?: number;
-    isMetric?: boolean;
-}
-
-export function SchematicPreview({
-    area = 0,
-    V_room = 0,
-    n_ach = 0,
-    v_wind = 0,
-    K = 0,
-    isMetric = true,
-}: SchematicPreviewProps) {
-    const { theme } = useTheme();
-    const isDark = theme === "dark";
-    const unit = isMetric ? "m²" : "ft²";
-    const displayArea = area.toFixed(3);
-    const inletFraction = Math.min(0.95, Math.max(0.05, area / Math.max(area * 8, 1)));
-    const inletPercent = Math.round(inletFraction * 100);
-
-    return (
-        <div
-            className="rounded-3xl p-6 h-full min-h-[300px] flex flex-col relative overflow-hidden group"
-            style={{
-                background: isDark ? "#131B2C" : "#ffffff",
-                border: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid #e2e8f0",
-            }}
-        >
-            <div className="flex justify-between items-center mb-6 z-10">
-                <h3
-                    className="text-xs font-bold uppercase tracking-wider"
-                    style={{ color: isDark ? "#6b7280" : "#94a3b8" }}
-                >
-                    Schematic Preview
-                </h3>
-                <div className="flex gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#1A73E8]" />
-                    <span
-                        className="w-1.5 h-1.5 rounded-full"
-                        style={{ background: isDark ? "#4b5563" : "#cbd5e1" }}
-                    />
-                </div>
-            </div>
-
-            <div className="flex-1 flex items-center justify-center relative z-10">
-                <div className="relative w-48 h-64">
-                    <div className="w-full h-full border-2 border-blue-500/30 rounded-sm bg-blue-500/5 relative">
-                        <div
-                            className="absolute bottom-0 left-0 right-0 bg-[#1A73E8]/20 border-t-2 border-dashed border-[#1A73E8]/60 transition-all duration-500 flex items-center justify-center"
-                            style={{ height: `${Math.max(8, Math.min(50, inletPercent))}%` }}
-                        >
-                            <div className="flex flex-col items-center">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M12 19V5" /><path d="M5 12l7-7 7 7" />
-                                </svg>
-                                <span className="text-[9px] text-[#1A73E8] font-mono font-bold mt-0.5">IN</span>
-                            </div>
-                        </div>
-                        <div
-                            className="absolute top-0 left-0 right-0 bg-[#1A73E8]/10 border-b-2 border-dashed border-[#1A73E8]/40 transition-all duration-500 flex items-center justify-center"
-                            style={{ height: `${Math.max(8, Math.min(50, inletPercent))}%` }}
-                        >
-                            <div className="flex flex-col items-center">
-                                <span className="text-[9px] text-blue-400 font-mono font-bold">OUT</span>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M12 5v14" /><path d="M5 12l7 7 7-7" />
-                                </svg>
-                            </div>
-                        </div>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="text-center">
-                                <div
-                                    className="text-[10px] font-mono"
-                                    style={{ color: isDark ? "#6b7280" : "#94a3b8" }}
-                                >
-                                    Aᴇᶠᶠ
-                                </div>
-                                <div className="text-sm font-bold text-[#1A73E8] font-mono transition-all duration-300">{displayArea}</div>
-                                <div
-                                    className="text-[9px] font-mono"
-                                    style={{ color: isDark ? "#6b7280" : "#94a3b8" }}
-                                >
-                                    {unit}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="absolute -left-8 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                            <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
-                                <path d="M0 6 H14 M10 2 L14 6 L10 10" stroke="#4ade80" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                            <span className="text-[8px] text-green-400 font-mono">{v_wind}m/s</span>
-                        </div>
-                    </div>
-                    <div
-                        className="absolute -bottom-7 left-0 w-full text-center text-[9px] font-mono"
-                        style={{ color: isDark ? "#6b7280" : "#94a3b8" }}
-                    >
-                        Q = {V_room} × {n_ach} = <span className="text-[#1A73E8]">{(V_room * n_ach).toFixed(0)} m³/h</span>
-                    </div>
-                </div>
-            </div>
-
-            <div
-                className="mt-8 text-[10px] italic max-w-xs mx-auto text-center z-10"
-                style={{ color: isDark ? "#6b7280" : "#94a3b8" }}
-            >
-                Top-inlet / bottom-outlet cross-ventilation configuration.
-            </div>
-        </div>
-    );
-}
