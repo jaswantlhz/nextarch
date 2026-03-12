@@ -1,11 +1,15 @@
-"use client"
+"use client";
+
 import { useState, useRef, useEffect } from "react";
-import { Settings, User, Sun, Moon, Monitor, Check } from "lucide-react";
+import { Settings, User, Sun, Moon, Monitor, Check, Menu } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useTheme } from "./theme-context";
+import { useSidebar } from "./sidebar-context";
 
 export function Header() {
     const [settingsOpen, setSettingsOpen] = useState(false);
     const { theme, toggleTheme } = useTheme();
+    const { isCollapsed, toggleMobileMenu } = useSidebar();
     const isDark = theme === "dark";
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -22,23 +26,32 @@ export function Header() {
 
     return (
         <header
-            className="h-16 border-b flex items-center justify-between px-6 fixed top-0 right-0 left-64 z-30"
+            className={cn(
+                "h-16 border-b flex items-center justify-between px-4 md:px-6 fixed top-0 right-0 z-30 transition-all duration-300",
+                isCollapsed ? "md:left-20" : "md:left-64",
+                "left-0"
+            )}
             style={{
                 background: isDark ? "#0B1221" : "#ffffff",
                 borderColor: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.08)",
-                transition: "background 0.3s, border-color 0.3s",
             }}
         >
-            {/* Brand */}
-            <div className="flex items-center gap-2">
-                <div className="text-blue-500">
+            {/* Brand & Toggle */}
+            <div className="flex items-center gap-3">
+                <button 
+                    onClick={toggleMobileMenu}
+                    className="p-2 -ml-2 md:hidden text-gray-500 hover:text-blue-500 transition-colors"
+                >
+                    <Menu size={24} />
+                </button>
+                <div className="text-blue-500 hidden sm:block">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
                         <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
                     </svg>
                 </div>
                 <span
-                    className="text-xl font-bold"
+                    className="text-lg md:text-xl font-bold truncate"
                     style={{ color: isDark ? "#ffffff" : "#1e293b", transition: "color 0.3s" }}
                 >
                     NextArch Precision
