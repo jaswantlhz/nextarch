@@ -95,29 +95,12 @@ export default function Qfromach() {
 
                     {/* Live Formula Preview */}
                     <div className="rounded-2xl p-6 relative" style={{ background: previewBg, border: previewBorder }}>
-                        <div className="flex justify-between items-center mb-8">
-                            <h3 className="text-[#1A73E8] text-xs font-bold uppercase tracking-wider">LIVE FORMULA PREVIEW</h3>
-                            <ArrowLeft className="h-5 w-5" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "#cbd5e1" }} />
-                        </div>
-                        <div className="text-2xl flex justify-center py-8 mb-8" style={{ color: titleColor }}>
-                            <BlockMath math={`Q = \\frac{ACH \\times V \\times \\rho \\times C_p \\times \\Delta T}{3600}`} />
-                        </div>
-                        <div className="rounded-xl p-4 font-mono text-sm space-y-3" style={{ background: stepBg, border: stepBorder }}>
-                            <div className="flex items-start gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs mt-1 w-24" style={{ color: labelColor }}>STEP</span>
-                                <span className="text-[#1A73E8] break-all">
-                                    {result
-                                        ? `Q = (${ACH} × ${V} × ${rho} × ${Cp} × ${delta_T}) / 3600`
-                                        : "Q = (ACH × V × ρ × Cp × ΔT) / 3600"
-                                    }
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs w-24" style={{ color: labelColor }}>IMPLEMENTATION:</span>
-                                <span className="text-green-400 font-bold">
-                                    {result ? result.Q.toFixed(3) : "Wait for calc..."}
-                                </span>
-                            </div>
+                        <div className="text-xl flex justify-center py-8 mb-8" style={{ color: titleColor }}>
+                            <BlockMath math={`\\begin{align*}
+                                Q &= \\frac{ACH \\times V \\times \\rho \\times C_p \\times \\Delta T}{3600} \\\\[6pt]
+                                Q &= \\frac{${ACH || 0} \\times ${V || 0} \\times ${rho || 1.2} \\times ${Cp || 1005} \\times ${delta_T || 0}}{3600} \\\\[6pt]
+                                Q &= ${((ACH || 0) * (V || 0) * (delta_T || 0)) === 0 ? '\\text{---}' : '\\mathbf{' + ((ACH * V * rho * Cp * delta_T) / 3600).toFixed(2) + '}'} \\; \\text{W}
+                            \\end{align*}`} />
                         </div>
                     </div>
                 </div>

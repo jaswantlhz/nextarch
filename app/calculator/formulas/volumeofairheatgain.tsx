@@ -150,54 +150,24 @@ export default function Volumeofairheatgain() {
                         }}
                     >
                         <div className="flex justify-between items-center mb-8">
-                            <h3 className="text-[#1A73E8] text-xs font-bold uppercase tracking-wider">
-                                LIVE FORMULA PREVIEW
-                            </h3>
+                            <h3 className="text-[#1A73E8] text-xs font-bold uppercase tracking-wider">LIVE FORMULA PREVIEW</h3>
                             <ArrowLeft className="h-5 w-5" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "#cbd5e1" }} />
                         </div>
-
-                        <div className="text-2xl flex justify-center py-8 mb-8" style={{ color: isDark ? "#ffffff" : "#1e293b" }}>
+                        <div className="text-xl flex justify-center py-8 mb-8 w-full overflow-x-auto" style={{ color: isDark ? "#ffffff" : "#1e293b" }}>
                             <BlockMath
-                                math={`
-                                    \\begin{align*}
+                                math={`\\begin{align*}
                                     Q_s &= \\frac{2.9768 \\times K_s}{t} \\\\
+                                    Q_s &= \\frac{2.9768 \\times ${ks || 0}}{${t || 0}} \\\\
+                                    Q_s &= ${(!ks || !t) ? '\\text{---}' : '\\mathbf{' + ((2.9768 * ks) / t).toFixed(2) + '}'} \\; \\text{W} \\\\[1em]
+                                    
                                     Q_l &= \\frac{K_l}{814 \\times (w_o - w_i)} \\\\
-                                    Q_t &\\approx \\max(Q_{t\\text{ vapor}}, Q_{t\\text{ humidity}})
-                                    \\end{align*}
-                                `}
+                                    Q_l &= \\frac{${kl || 0}}{814 \\times (${wo || 0} - ${wi || 0})} \\\\
+                                    Q_l &= ${(!kl || (wo - wi) === 0) ? '\\text{---}' : '\\mathbf{' + (kl / (814 * (wo - wi))).toFixed(2) + '}'} \\; \\text{W} \\\\[1em]
+                                    
+                                    Q_t &= \\max(Q_s, Q_l) \\\\
+                                    Q_t &= ${(!ks || !t) && (!kl || (wo - wi) === 0) ? '\\text{---}' : '\\mathbf{' + Math.max(t ? (2.9768 * ks) / t : 0, (wo - wi) ? kl / (814 * (wo - wi)) : 0).toFixed(2) + '}'} \\; \\text{W}
+                                \\end{align*}`}
                             />
-                        </div>
-
-                        <div
-                            className="rounded-xl p-4 font-mono text-sm space-y-3"
-                            style={{
-                                background: isDark ? "#131B2C" : "#f1f5f9",
-                                border: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid #e2e8f0",
-                            }}
-                        >
-                            <div className="flex items-start gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs mt-1 w-24" style={{ color: isDark ? "#6b7280" : "#94a3b8" }}>STEP</span>
-                                <div className="space-y-1">
-                                    <span className="text-[#1A73E8] break-all block">
-                                        {result
-                                            ? `Qs = (2.977 × ${ks}) / ${t}`
-                                            : "Qs = (2.977 × Ks) / t"
-                                        }
-                                    </span>
-                                    <span className="text-[#1A73E8] break-all block">
-                                        {result
-                                            ? `Ql = ${kl} / (814 × (${wo} - ${wi}))`
-                                            : "Ql = Kl / (814 × (wo - wi))"
-                                        }
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs w-24" style={{ color: isDark ? "#6b7280" : "#94a3b8" }}>IMPLEMENTATION:</span>
-                                <span className="text-green-400 font-bold">
-                                    {result ? `Qs: ${result.Qs.toFixed(1)}, Ql: ${result.Q_humidity.toFixed(1)}` : "Wait for calc..."}
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -190,25 +190,15 @@ export default function Byelement() {
                             <h3 className="text-[#1A73E8] text-xs font-bold uppercase tracking-wider">LIVE FORMULA PREVIEW</h3>
                             <ArrowLeft className="h-5 w-5" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "#cbd5e1" }} />
                         </div>
-                        <div className="text-2xl flex justify-center py-8 mb-8" style={{ color: titleColor }}>
-                            <BlockMath math={`Q_{total} = (\\sum (U_i \\times A_i)) \\times \\Delta T`} />
-                        </div>
-                        <div className="rounded-xl p-4 font-mono text-sm space-y-3" style={{ background: stepBg, border: stepBorder }}>
-                            <div className="flex items-start gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs mt-1 w-24" style={{ color: labelColor }}>STEP</span>
-                                <span className="text-[#1A73E8] break-all">
-                                    {result
-                                        ? `Q = (${elements.map(e => (e.U * e.A).toFixed(1)).join(' + ')}) × ${deltaT}`
-                                        : "Q = (Σ U × A) × ΔT"
-                                    }
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs w-24" style={{ color: labelColor }}>IMPLEMENTATION:</span>
-                                <span className="text-green-400 font-bold">
-                                    {result ? result.Q_total.toFixed(3) : "Wait for calc..."}
-                                </span>
-                            </div>
+                        <div className="text-xl flex justify-center py-8 mb-8 w-full overflow-x-auto" style={{ color: titleColor }}>
+                            <BlockMath math={`\\begin{align*}
+                                ${elements.map((e, index) => `UA_{${index + 1}} &= U_{${index + 1}} \\times A_{${index + 1}} = ${e.U || 0} \\times ${e.A || 0} = ${((e.U || 0) * (e.A || 0)).toFixed(2)} \\; \\text{W/K} \\\\[6pt]`).join('')}
+                                UA_{\\text{total}} &= ${elements.map((_, i) => `UA_{${i + 1}}`).join(' + ')} \\\\
+                                UA_{\\text{total}} &= ${elements.map((e, i) => ((e.U || 0) * (e.A || 0)).toFixed(2)).join(' + ')} = ${elements.reduce((acc, el) => acc + ((el.U || 0) * (el.A || 0)), 0).toFixed(2)} \\; \\text{W/K} \\\\[1em]
+                                Q_{\\text{total}} &= UA_{\\text{total}} \\times \\Delta T \\\\
+                                Q_{\\text{total}} &= ${elements.reduce((acc, el) => acc + ((el.U || 0) * (el.A || 0)), 0).toFixed(2)} \\times ${deltaT || 0} \\\\
+                                Q_{\\text{total}} &= ${elements.reduce((acc, el) => acc + ((el.U || 0) * (el.A || 0)), 0) === 0 || !deltaT ? '\\text{---}' : '\\mathbf{' + (elements.reduce((acc, el) => acc + ((el.U || 0) * (el.A || 0)), 0) * deltaT).toFixed(2) + '}'} \\; \\text{W}
+                            \\end{align*}`} />
                         </div>
                     </div>
                 </div>

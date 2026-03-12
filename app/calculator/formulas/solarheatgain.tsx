@@ -97,25 +97,14 @@ export default function SolarHeatGain() {
                             <h3 className="text-[#1A73E8] text-xs font-bold uppercase tracking-wider">LIVE FORMULA PREVIEW</h3>
                             <ArrowLeft className="h-5 w-5" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "#cbd5e1" }} />
                         </div>
-                        <div className="text-2xl flex justify-center py-8 mb-8" style={{ color: titleColor }}>
-                            <BlockMath math={`Q_{\\text{solar}} = A \\times (\\text{SHGC} \\times \\text{PF}) \\times I`} />
-                        </div>
-                        <div className="rounded-xl p-4 font-mono text-sm space-y-3" style={{ background: stepBg, border: stepBorder }}>
-                            <div className="flex items-start gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs mt-1 w-24" style={{ color: labelColor }}>STEP</span>
-                                <span className="text-[#1A73E8] break-all">
-                                    {result
-                                        ? `Q = ${area} × (${shgc} × ${projection_factor}) × ${solar_irradiation}`
-                                        : "Q = A × (SHGC × PF) × I"
-                                    }
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-4 mx-4 my-2">
-                                <span className="uppercase tracking-wider text-xs w-24" style={{ color: labelColor }}>IMPLEMENTATION:</span>
-                                <span className="text-green-400 font-bold">
-                                    {result ? result.Q_solar.toFixed(3) : "Wait for calc..."}
-                                </span>
-                            </div>
+                        <div className="text-xl flex justify-center py-8 mb-8" style={{ color: titleColor }}>
+                            <BlockMath math={`\\begin{align*}
+                                \\text{Effective SHGC} &= \\text{SHGC} \\times \\text{Projection Factor} \\\\
+                                \\text{Effective SHGC} &= ${shgc || 0} \\times ${projection_factor || 1} = ${((shgc || 0) * (projection_factor || 1)) === 0 ? '\\text{---}' : ((shgc || 0) * (projection_factor || 1)).toFixed(2)} \\\\[1em]
+                                Q_{\\text{solar}} &= A \\times \\text{Effective SHGC} \\times I \\quad [W] \\\\
+                                Q_{\\text{solar}} &= ${area || 0} \\times ${((shgc || 0) * (projection_factor || 1)) === 0 ? '\\text{---}' : ((shgc || 0) * (projection_factor || 1)).toFixed(2)} \\times ${solar_irradiation || 0} \\\\
+                                Q_{\\text{solar}} &= ${(!area || !shgc || !solar_irradiation) ? '\\text{---}' : '\\mathbf{' + (area * (shgc * projection_factor) * solar_irradiation).toFixed(2) + '}'} \\; \\text{W}
+                            \\end{align*}`} />
                         </div>
                     </div>
                 </div>
