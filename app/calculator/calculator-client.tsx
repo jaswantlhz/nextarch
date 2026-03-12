@@ -4,7 +4,6 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
 // Formula Components
-import WindowOpeningDashboard from "./window-opening-dashboard";
 import Windowcalculations from "./formulas/windowcalculations";
 import Volumeofairheatgain from "./formulas/volumeofairheatgain";
 import Voaqwqtforce from "./formulas/volumeofairqw+qtforces";
@@ -14,12 +13,10 @@ import SolarHeatGain from "./formulas/solarheatgain";
 
 function CalculatorContent() {
     const searchParams = useSearchParams();
-    const mode = searchParams.get("mode") || "window-opening";
+    const mode = searchParams.get("mode") || "window-calculations";
 
     const renderCalculator = () => {
         switch (mode) {
-            case "window-opening":
-                return <WindowOpeningDashboard />;
             case "window-calculations":
                 return <Windowcalculations />;
             case "volume-heat-gain":
@@ -33,7 +30,7 @@ function CalculatorContent() {
             case "solar-heat-gain":
                 return <SolarHeatGain />;
             default:
-                return <WindowOpeningDashboard />;
+                return <Windowcalculations />;
         }
     };
 
