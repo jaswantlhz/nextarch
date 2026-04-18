@@ -1,10 +1,8 @@
 "use client"
-import { useTransition } from "react"
 import { PieChart } from "lucide-react"
-import { to_calc } from "../actions/login"
+import Link from "next/link"
 
 export default function Description() {
-  const [, startTransition] = useTransition()
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "#0a0f1e", fontFamily: "'Inter', sans-serif" }}>
@@ -166,9 +164,9 @@ export default function Description() {
           <span className="dp-logo-name">NextArch Precision</span>
         </div>
         <div className="dp-nav-right">
-          <button className="dp-nav-cta" onClick={() => startTransition(() => to_calc())}>
+          <Link href="/login" className="dp-nav-cta" style={{ textDecoration: 'none' }}>
             Go to Calculator
-          </button>
+          </Link>
           <div className="dp-nav-avatar">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -193,13 +191,13 @@ export default function Description() {
               This interactive tool is designed to assist architects, engineers, and building professionals in optimizing window openings and calculating combined ventilation flows. It helps ensure efficient natural ventilation, improved indoor air quality, and enhanced thermal comfort while adhering to established standards for sustainable building design.
             </p>
             <div className="dp-cta-row">
-              <button className="dp-btn-primary" onClick={() => startTransition(() => to_calc())}>
+              <Link href="/calculator" className="dp-btn-primary" style={{ textDecoration: 'none' }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />
                   <rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" />
                 </svg>
                 Go to Calculator
-              </button>
+              </Link>
               <button className="dp-btn-secondary">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
@@ -255,6 +253,7 @@ export default function Description() {
                 </div>
               ))}
             </div>
+
 
 
           </div>
