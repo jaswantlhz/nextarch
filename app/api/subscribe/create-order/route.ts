@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
 
-
-// Plan definitions
 const PLANS = {
-  monthly: { amount: 50000, label: "1-Month Plan" },    // ₹500 in paise
-  quarterly: { amount: 100000, label: "3-Month Plan" }, // ₹1000 in paise
+  monthly:   { planId: "plan_Sey3obBDEfekzi", label: "Monthly Plan (₹500/mo)", totalCount: 12 },
+  quarterly: { planId: "plan_Sey48FsvwOMRgX", label: "Quarterly Plan (₹1,000/3mo)", totalCount: 4 },
 } as const;
 
 type PlanKey = keyof typeof PLANS;
@@ -23,24 +21,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
   }
 
-  const { amount, label } = PLANS[plan];
-
   const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID!,
     key_secret: process.env.RAZORPAY_KEY_SECRET!,
   });
 
-  const order = await razorpay.orders.create({
-    amount,
-    currency: "INR",
-    receipt: `rcpt_${Date.now()}`,
-    notes: { plan, email, label },
+  const { planId, label, totalCount } = PLANS[plan];
+
+  const subscription = await razorpay.subscriptions.create({
+    plan_id: planId,
+    total_count: totalCount,
+    quantity: 1,
+    notes: { plan, email },
   });
 
   return NextResponse.json({
-    orderId: order.id,
-    amount: order.amount,
-    currency: order.currency,
+    subscriptionId: subscription.id,
     label,
   });
 }

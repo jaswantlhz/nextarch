@@ -10,14 +10,15 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
   const {
-    razorpay_order_id,
     razorpay_payment_id,
+    razorpay_subscription_id,
     razorpay_signature,
     plan,
   } = body;
 
-  // ── Verify HMAC-SHA256 signature ─────────────────────────────
-  const payload = `${razorpay_order_id}|${razorpay_payment_id}`;
+  // ── Verify Razorpay subscription signature ───────────────────
+  // Signature = HMAC-SHA256(payment_id + "|" + subscription_id)
+  const payload = `${razorpay_payment_id}|${razorpay_subscription_id}`;
   const expectedSignature = crypto
     .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
     .update(payload)
@@ -30,7 +31,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // ── Calculate plan expiry ────────────────────────────────────
+  // ── Set plan expiry (30 or 90 days from now as initial window)
+  // Webhooks should extend this on renewal — for now a safe buffer
   const daysToAdd = plan === "monthly" ? 30 : 90;
   const planExpiresAt = new Date();
   planExpiresAt.setDate(planExpiresAt.getDate() + daysToAdd);
@@ -46,7 +48,7 @@ export async function POST(request: NextRequest) {
         $set: {
           plan,
           planExpiresAt,
-          razorpayOrderId: razorpay_order_id,
+          razorpaySubId: razorpay_subscription_id,
           razorpayPaymentId: razorpay_payment_id,
           subscribedAt: new Date(),
         },

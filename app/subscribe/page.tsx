@@ -73,7 +73,7 @@ export default function SubscribePage() {
       try {
         await loadRazorpayScript();
 
-        // 1. Create order on server
+        // 1. Create Razorpay Subscription on server
         const orderRes = await fetch("/api/subscribe/create-order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -82,26 +82,28 @@ export default function SubscribePage() {
 
         if (!orderRes.ok) {
           const data = await orderRes.json();
-          throw new Error(data.error || "Could not create order");
+          throw new Error(data.error || "Could not create subscription");
         }
 
-        const { orderId, amount, currency, label } = await orderRes.json();
+        const { subscriptionId, label } = await orderRes.json();
 
-        // 2. Open Razorpay Checkout
+        // 2. Open Razorpay Checkout with subscription_id
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const options: Record<string, unknown> = {
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
-          amount: Number(amount),
-          currency,
+          subscription_id: subscriptionId,   // ← subscription, not order
           name: "NextArch Precision",
           description: label,
-          order_id: orderId,
           theme: { color: planId === "monthly" ? "#2563eb" : "#7c3aed" },
           modal: {
             ondismiss: () => setLoading(null),
           },
-          handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
-            // 3. Verify payment on server
+          handler: async (response: {
+            razorpay_payment_id: string;
+            razorpay_subscription_id: string;
+            razorpay_signature: string;
+          }) => {
+            // 3. Verify subscription payment on server
             try {
               const verifyRes = await fetch("/api/subscribe/verify", {
                 method: "POST",
