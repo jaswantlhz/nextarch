@@ -205,9 +205,9 @@ export function Header() {
                                 ? "linear-gradient(135deg,#1A73E8,#2563eb)"
                                 : "linear-gradient(135deg,#dc2626,#9333ea)",
                             color: "#fff",
-                            ringColor: isDark ? "#334155" : "#e2e8f0",
-                            ringOffsetColor: isDark ? "#0B1221" : "#ffffff",
-                        }}
+                            "--tw-ring-color": isDark ? "#334155" : "#e2e8f0",
+                            "--tw-ring-offset-color": isDark ? "#0B1221" : "#ffffff",
+                        } as React.CSSProperties}
                         title={usage?.name ?? "Profile"}
                         aria-label="Profile"
                     >
