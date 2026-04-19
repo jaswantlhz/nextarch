@@ -191,7 +191,7 @@ export default function Description() {
               This interactive tool is designed to assist architects, engineers, and building professionals in optimizing window openings and calculating combined ventilation flows. It helps ensure efficient natural ventilation, improved indoor air quality, and enhanced thermal comfort while adhering to established standards for sustainable building design.
             </p>
             <div className="dp-cta-row">
-              <Link href="/calculator" className="dp-btn-primary" style={{ textDecoration: 'none' }}>
+              <Link href="/login" className="dp-btn-primary" style={{ textDecoration: 'none' }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />
                   <rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" />

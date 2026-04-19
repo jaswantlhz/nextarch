@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PieChart, Check, Zap, Shield, Star, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -65,6 +65,15 @@ export default function SubscribePage() {
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // ── Auth guard: redirect to login if not authenticated ───────
+  useEffect(() => {
+    fetch("/api/usage")
+      .then((r) => {
+        if (!r.ok) router.replace("/login?from=/subscribe");
+      })
+      .catch(() => router.replace("/login?from=/subscribe"));
+  }, [router]);
+
   const handleSubscribe = useCallback(
     async (planId: "monthly" | "quarterly") => {
       setError(null);
@@ -81,6 +90,11 @@ export default function SubscribePage() {
         });
 
         if (!orderRes.ok) {
+          // If unauthenticated, redirect to login then back here
+          if (orderRes.status === 401) {
+            router.push("/login?from=/subscribe");
+            return;
+          }
           const data = await orderRes.json();
           throw new Error(data.error || "Could not create subscription");
         }
